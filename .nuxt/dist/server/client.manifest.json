@@ -6,10 +6,10 @@
     "module": true,
     "resourceType": "script"
   },
-  "/home/nonchaos/Projects/VueProjects/NuxtProjects/sepcamp/node_modules/nuxt/dist/app/entry.mjs": {
+  "/home/nonchaos/Projects/VueProjects/NuxtProjects/sepcamp-vue/node_modules/nuxt/dist/app/entry.mjs": {
     "resourceType": "script",
     "module": true,
     "isEntry": true,
-    "file": "/home/nonchaos/Projects/VueProjects/NuxtProjects/sepcamp/node_modules/nuxt/dist/app/entry.mjs"
+    "file": "/home/nonchaos/Projects/VueProjects/NuxtProjects/sepcamp-vue/node_modules/nuxt/dist/app/entry.mjs"
   }
 }
