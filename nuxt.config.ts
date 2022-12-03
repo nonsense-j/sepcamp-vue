@@ -11,5 +11,8 @@ export default defineNuxtConfig({
   },
   app: {
     pageTransition: { name: 'page', mode: 'out-in' }
-  }
+  },
+  plugins: [
+    { src: "~/plugins/rsa.js", mode: "client" }
+  ]
 })
