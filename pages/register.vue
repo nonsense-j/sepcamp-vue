@@ -28,7 +28,7 @@
       </v-select>
 
       <v-btn block class="text-white" size="large" color="secondary" append-icon="mdi-account-plus" rounded="lg"
-        :loading="loading[2]" :disabled="loading[2]" @click="load(2)">
+        :loading="loading[2]" :disabled="loading[2]" @click="register">
         注册
       </v-btn>
 
@@ -64,6 +64,9 @@
 }
 </style>
 <script>
+import axios from "axios";
+import register from "~/pages/register.vue";
+
 definePageMeta({
   layout: "entrance",
   pageTransition: {
@@ -102,9 +105,36 @@ export default {
       '学生',
       '助教',
       '教师'
-    ]
+    ],
+    rsa_pub_key: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfUL4XUO6v0vaWQ8GfSWvwSgTO\n' +
+        '6wXUBdHyTXXKGirCZ/r/isdfQqwkK1urDE2M2s+YAJYhLCrjf6nACejc8Rhx0UJ9\n' +
+        '9e9MKehfFkUA1MzvlG+Azu4tBzxjO04u6iLe+p+kOXMouH3nTmgWY7/4s2d85uxz\n' +
+        'PxO26t2eZb9qJRmatQIDAQAB',
+    serverURL: 'http://localhost:8080/'
   }),
   methods: {
+    register() {
+      let user = {
+        username: this.name,
+        email: this.emailRe,
+        password: this.$encrypt(this.newPassword, this.rsa_pub_key)
+      }
+      axios.post(this.serverURL + "register", user)
+          .then(response => {
+            if(response.status === 200) {
+              // TODO: deal with login success
+              console.log(response)
+            }
+            else {
+              // TODO: deal with other response code
+              console.log(response)
+            }
+          })
+          .catch(error => {
+            // TODO: deal with error
+            console.error(error)
+          })
+    },
     load(i) {
       this.loading[i] = true
       setTimeout(() => (this.loading[i] = false), 3000)

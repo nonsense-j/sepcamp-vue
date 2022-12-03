@@ -18,7 +18,7 @@
       </v-card>
 
       <v-btn block color="primary" size="large" append-icon="mdi-login" rounded="lg" :loading="loading[1]"
-        :disabled="loading[1]" @click="load(1)">
+        :disabled="loading[1]" @click="login">
         登录
       </v-btn>
       <div class=" d-inline-flex justify-end mt-2">
@@ -54,6 +54,8 @@
 }
 </style>
 <script>
+import axios from "axios";
+
 definePageMeta({
   layout: "entrance",
   pageTransition: {
@@ -78,6 +80,11 @@ export default {
       v => (v && v.length >= 8) || '密码长度必须不少于8',
       v => /(?=.*\d)(?=.*[A-z])[\da-zA-Z]+/.test(v) || '密码只能由字母、数字组成',
     ],
+    rsa_pub_key: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfUL4XUO6v0vaWQ8GfSWvwSgTO\n' +
+        '6wXUBdHyTXXKGirCZ/r/isdfQqwkK1urDE2M2s+YAJYhLCrjf6nACejc8Rhx0UJ9\n' +
+        '9e9MKehfFkUA1MzvlG+Azu4tBzxjO04u6iLe+p+kOXMouH3nTmgWY7/4s2d85uxz\n' +
+        'PxO26t2eZb9qJRmatQIDAQAB',
+    serverURL: 'http://localhost:8080/'
   }),
   methods: {
     // async validate() {
@@ -95,6 +102,27 @@ export default {
       this.loading[i] = true
       setTimeout(() => (this.loading[i] = false), 3000)
     },
+    login() {
+      let user = new FormData()
+      user.append('username', this.email)
+      user.append('password', this.$encrypt(this.password, this.rsa_pub_key))
+      axios.post(this.serverURL + "dologin", user)
+          .then(response => {
+            if(response.status === 200) {
+              // TODO: deal with login success
+              console.log(response)
+            }
+            else {
+              // TODO: deal with other response code
+              console.log(response)
+            }
+          })
+          .catch(error => {
+            // TODO: deal with error
+            console.error(error)
+          })
+    }
   },
 }
+
 </script>
