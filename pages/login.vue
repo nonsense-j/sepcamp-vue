@@ -55,6 +55,7 @@
 </style>
 <script>
 import axios from "axios";
+import {store} from "~/store/store";
 
 definePageMeta({
   layout: "entrance",
@@ -80,11 +81,7 @@ export default {
       v => (v && v.length >= 8) || '密码长度必须不少于8',
       v => /(?=.*\d)(?=.*[A-z])[\da-zA-Z]+/.test(v) || '密码只能由字母、数字组成',
     ],
-    rsa_pub_key: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfUL4XUO6v0vaWQ8GfSWvwSgTO\n' +
-        '6wXUBdHyTXXKGirCZ/r/isdfQqwkK1urDE2M2s+YAJYhLCrjf6nACejc8Rhx0UJ9\n' +
-        '9e9MKehfFkUA1MzvlG+Azu4tBzxjO04u6iLe+p+kOXMouH3nTmgWY7/4s2d85uxz\n' +
-        'PxO26t2eZb9qJRmatQIDAQAB',
-    serverURL: 'http://localhost:8080/'
+    rsa_pub_key: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfUL4XUO6v0vaWQ8GfSWvwSgTO6wXUBdHyTXXKGirCZ/r/isdfQqwkK1urDE2M2s+YAJYhLCrjf6nACejc8Rhx0UJ99e9MKehfFkUA1MzvlG+Azu4tBzxjO04u6iLe+p+kOXMouH3nTmgWY7/4s2d85uxzPxO26t2eZb9qJRmatQIDAQAB'
   }),
   methods: {
     // async validate() {
@@ -103,14 +100,27 @@ export default {
       setTimeout(() => (this.loading[i] = false), 3000)
     },
     login() {
+      this.loading[1] = true
+      const global_store = store()
       let user = new FormData()
       user.append('username', this.email)
       user.append('password', this.$encrypt(this.password, this.rsa_pub_key))
-      axios.post(this.serverURL + "dologin", user)
+      axios.post(global_store.serverURL + "dologin", user)
           .then(response => {
             if(response.status === 200) {
               // TODO: deal with login success
-              console.log(response)
+              let result = response.data
+              console.log('Bearer ' + result.token)
+              if(result.success === true) {
+                // login success
+                global_store.setToken('Bearer ' + result.token)
+                console.log(global_store.token)
+                this.$router.push('/')
+                alert('登录成功')
+              }
+              else {
+                alert(result.message)
+              }
             }
             else {
               // TODO: deal with other response code
@@ -121,6 +131,7 @@ export default {
             // TODO: deal with error
             console.error(error)
           })
+      this.loading[1] = false
     }
   },
 }

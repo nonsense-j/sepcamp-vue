@@ -14,5 +14,8 @@ export default defineNuxtConfig({
   },
   plugins: [
     { src: "~/plugins/rsa.js", mode: "client" }
+  ],
+  modules: [
+      '@pinia/nuxt'
   ]
 })
