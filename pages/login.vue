@@ -105,21 +105,17 @@ export default {
       let user = new FormData()
       user.append('username', this.email)
       user.append('password', this.$encrypt(this.password, this.rsa_pub_key))
+      //axios.defaults.headers['authorization'] = global_store.token;
       axios.post(global_store.serverURL + "dologin", user)
           .then(response => {
             if(response.status === 200) {
               // TODO: deal with login success
               let result = response.data
-              console.log('Bearer ' + result.token)
               if(result.success === true) {
                 // login success
                 global_store.setToken('Bearer ' + result.token)
-                console.log(global_store.token)
                 this.$router.push('/')
                 alert('登录成功')
-              }
-              else {
-                alert(result.message)
               }
             }
             else {

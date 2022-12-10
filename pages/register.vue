@@ -65,7 +65,7 @@
 </style>
 <script>
 import axios from "axios";
-import register from "~/pages/register.vue";
+import {store} from "~/store/store";
 
 definePageMeta({
   layout: "entrance",
@@ -109,8 +109,7 @@ export default {
     rsa_pub_key: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfUL4XUO6v0vaWQ8GfSWvwSgTO\n' +
         '6wXUBdHyTXXKGirCZ/r/isdfQqwkK1urDE2M2s+YAJYhLCrjf6nACejc8Rhx0UJ9\n' +
         '9e9MKehfFkUA1MzvlG+Azu4tBzxjO04u6iLe+p+kOXMouH3nTmgWY7/4s2d85uxz\n' +
-        'PxO26t2eZb9qJRmatQIDAQAB',
-    serverURL: 'http://localhost:8080/'
+        'PxO26t2eZb9qJRmatQIDAQAB'
   }),
   methods: {
     register() {
@@ -119,7 +118,8 @@ export default {
         email: this.emailRe,
         password: this.$encrypt(this.newPassword, this.rsa_pub_key)
       }
-      axios.post(this.serverURL + "register", user)
+      const global_store = store();
+      axios.post(global_store.serverURL + "register", user)
           .then(response => {
             if(response.status === 200) {
               // TODO: deal with login success
