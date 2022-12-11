@@ -178,7 +178,7 @@ if (user.userName.length !== 0) {
   data.userIcon = 'mdi-account-check-outline';
 }
 // 老师--修改作业管理跳转，项目管理跳转以及修改用户登陆图标
-if (user.priority === 1) {
+if (user.priority === 1 || user.priority === 2) {
   taskLink = "/task/manage";
   projectLink = "/project/manage"
   data.userIcon = 'mdi-account-key-outline';

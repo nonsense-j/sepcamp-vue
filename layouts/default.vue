@@ -51,12 +51,10 @@
       </NuxtLink>
     </v-app-bar>
 
-    <v-main class="mt-16">
-      <v-sheet class="mx-auto blur main-sheet" :color=data.bgColor rounded="lg" elevation="6">
-
+    <v-main>
+      <v-sheet class="mx-auto blur main-sheet mt-3 pa-4" rounded="lg" elevation="6">
         <slot />
       </v-sheet>
-
     </v-main>
     <v-footer class="d-flex flex-column my-4">
       <div class="w-100">
@@ -97,7 +95,7 @@
 .main-sheet {
   width: 96%;
   margin-top: -30vh;
-  min-height: 1400px;
+  min-height: 400px;
 }
 </style>
 <script setup>
@@ -114,7 +112,6 @@ let data = reactive({
   themeIcon: theme.global.current.value.dark ? 'mdi-weather-night' : 'mdi-weather-sunny',
   userIcon: 'mdi-account-question-outline',
   userName: '未登录',
-  bgColor: theme.global.current.value.dark ? '#000a' : '#fffc',
   textColor: theme.global.current.value.dark ? 'white' : 'black',
 });
 let icons = ref([
@@ -141,7 +138,6 @@ if (user.priority === 1) {
 
 const toggleTheme = () => {
   data.themeIcon = theme.global.current.value.dark ? 'mdi-weather-sunny' : 'mdi-weather-night';
-  data.bgColor = theme.global.current.value.dark ? '#fffc' : '#0003';
   data.textColor = theme.global.current.value.dark ? 'black' : 'white';
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark';
 }
