@@ -1,0 +1,17 @@
+@font-face {
+  font-family: "SmileySans";
+  src: url('~/assets/fonts/SmileySans-Oblique.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: "pFangSans";
+  src: url('~/assets/fonts/iosFont16.ttf') format('truetype');
+}
+
+.font-pFang {
+  font-family: pFangSans !important;
+}
+
+.font-comic {
+  font-family: Comic Sans MS !important;
+}

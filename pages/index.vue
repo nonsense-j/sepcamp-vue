@@ -1,34 +1,114 @@
 <template>
-  <header>
-    <div class="d-flex align-center flex-column">
-      <v-icon icon="mdi-home" />
-      <v-card class="my-3 py-3" width="400" variant="tonal">
-        <nav class="d-flex align-center flex-column">
-          <ul>
-            <li>
-              <NuxtLink to="/posts">Posts合集</NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/posts/1">Post 1</NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/posts/2">Post 2</NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/posts/child">其它子文章</NuxtLink>
-            </li>
-          </ul>
-        </nav>
-      </v-card>
-      <div id="main-footer" class="d-flex flex-row">
-        <v-btn class="my-3 mx-10">
-          <NuxtLink class="text-decoration-none font-weight-bold" to="/about">About</NuxtLink>
-        </v-btn>
-        <v-btn class="my-3 mx-10">
-          <NuxtLink class="text-decoration-none font-weight-bold" to="/login">Login</NuxtLink>
-        </v-btn>
-      </div>
+  <div class="d-flex flex-row justify-center card-container px-10 pt-15 pb-5">
+    <v-hover v-slot="{ isHovering, props }">
+      <v-card class="mx-auto mb-10" width="320px" :elevation="isHovering ? 24 : 10" v-bind="props">
+        <v-img :src=workImg height="200px" cover></v-img>
 
-    </div>
-  </header>
+        <v-card-title>
+          <v-icon>mdi-format-list-checks</v-icon>
+          作业管理
+        </v-card-title>
+
+        <v-card-text class="card-subtext mx-2">
+          课堂作业以及课后作业提交以及记录。
+          支持统一高效地提供作业提交与收集。
+        </v-card-text>
+        <v-spacer />
+        <v-divider length="80%" class="mx-4 mt-2"></v-divider>
+
+        <v-card-actions>
+          <v-spacer />
+          <NuxtLink :to="taskLink" class=" text-decoration-none">
+            <v-btn color="orange-lighten-1" variant="text" prepend-icon="mdi-chevron-double-right">
+              立即跳转
+            </v-btn>
+          </NuxtLink>
+        </v-card-actions>
+      </v-card>
+    </v-hover>
+    <v-hover v-slot="{ isHovering, props }">
+      <v-card class="mx-auto mb-10" width="320px" :elevation="isHovering ? 24 : 10" v-bind="props">
+        <v-img :src=ideaImg height="200px" cover></v-img>
+
+        <v-card-title>
+          <v-icon>mdi-lightbulb-group-outline</v-icon>
+          项目广场
+        </v-card-title>
+
+        <v-card-text class="card-subtext mx-2 flex-fill">
+          查看课程其它同学已经发布的项目以及以往项目合集。想不到合适的项目之时，不妨看看其他同学的Idea？
+        </v-card-text>
+        <v-divider length="80%" class="mx-4 mt-2"></v-divider>
+
+        <v-card-actions>
+          <v-spacer />
+          <NuxtLink to="/project/showall" class=" text-decoration-none">
+            <v-btn color="orange-lighten-1" variant="text" prepend-icon="mdi-chevron-double-right">
+              立即跳转
+            </v-btn>
+          </NuxtLink>
+        </v-card-actions>
+      </v-card>
+    </v-hover>
+    <v-hover v-slot="{ isHovering, props }">
+      <v-card class="mx-auto mb-10" width="320px" :elevation="isHovering ? 24 : 10" v-bind="props">
+        <v-img :src=projImg height="200px" cover></v-img>
+
+        <v-card-title>
+          <v-icon>mdi-webhook</v-icon>
+          项目管理
+        </v-card-title>
+
+        <v-card-text class="card-subtext mx-2">
+          在开始进行你的项目之前，你需要首先在我的小队中进行组队。组队完成后可进入查看项目进度管理。
+        </v-card-text>
+        <v-divider length="80%" class="mx-4 mt-2"></v-divider>
+
+        <v-card-actions>
+          <v-spacer />
+          <NuxtLink :to="projectLink" class=" text-decoration-none">
+            <v-btn color="orange-lighten-1" variant="text" prepend-icon="mdi-chevron-double-right">
+              立即跳转
+            </v-btn>
+          </NuxtLink>
+        </v-card-actions>
+      </v-card>
+    </v-hover>
+  </div>
 </template>
+<style scoped>
+.card-container {
+  gap: 2%;
+  flex-wrap: wrap;
+}
+
+.card-subtext {
+  opacity: 0.6;
+}
+</style>
+<script>
+import workImg from '~/assets/image/homework.jpg'
+import ideaImg from '~/assets/image/ideas.jpg'
+import projImg from '~/assets/image/project.jpg'
+
+definePageMeta({
+  layout: "main",
+});
+
+// 用户接口
+const user = {
+  userName: "Aurora",
+  priority: 0,
+}
+
+export default {
+  data: () => ({
+    show: false,
+    taskLink: user.priority ? "/task/manage" : "/task/taskflow",
+    projectLink: user.priority ? "/project/manage" : "/project/board",
+    workImg: workImg,
+    ideaImg: ideaImg,
+    projImg: projImg,
+  }),
+}
+</script>
