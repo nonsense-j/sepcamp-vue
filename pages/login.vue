@@ -114,8 +114,13 @@ export default {
               if(result.success === true) {
                 // login success
                 global_store.setToken('Bearer ' + result.token)
+                global_store.setPriority(result.priority)
+                global_store.setUsername(result.message)
                 this.$router.push('/')
                 alert('登录成功')
+              }
+              else {
+                alert(result.message)
               }
             }
             else {

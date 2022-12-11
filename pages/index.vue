@@ -90,6 +90,7 @@
 import workImg from '~/assets/image/homework.jpg'
 import ideaImg from '~/assets/image/ideas.jpg'
 import projImg from '~/assets/image/project.jpg'
+import {store} from "~/store/store";
 
 definePageMeta({
   layout: "main",
@@ -97,8 +98,8 @@ definePageMeta({
 
 // 用户接口
 const user = {
-  userName: "Aurora",
-  priority: 0,
+  userName: store().username,
+  priority: store().priority,
 }
 
 export default {

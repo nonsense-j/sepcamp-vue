@@ -146,11 +146,12 @@
 import { useTheme } from 'vuetify'
 import lightImg from '~/assets/image/lightCode.jpg'
 import darkImg from '~/assets/image/darkCode.jpg'
+import {store} from "~/store/store";
 
 // 用户接口
 const user = {
-  userName: "Aurora",
-  priority: 0,
+  userName: store().username,
+  priority: store().priority,
 }
 
 const theme = useTheme();
