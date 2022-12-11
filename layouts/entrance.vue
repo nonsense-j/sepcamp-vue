@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed-bg d-flex flex-column" :style="{ backgroundImage: `url(${data.bgImage})` }">
+  <div class="fixed-bg font-pFang d-flex flex-column" :style="{ backgroundImage: `url(${data.bgImage})` }">
     <div class="surface d-flex flex-column align-center">
       <div id="login-content" class="w-100">
         <div class="d-flex flex-column align-center">
@@ -26,6 +26,8 @@
   </div>
 </template>
 <style scoped>
+@import "~/assets/css/customFonts.css";
+
 .sepcamp-title {
   font-size: 2rem !important;
   letter-spacing: 0.1rem !important;
@@ -58,7 +60,7 @@ import darkImg from '~/assets/image/darkPlanet.jpg'
 
 
 const theme = useTheme();
-let data = reactive({ bgImage: lightImg, });
+let data = reactive({ bgImage: theme.global.current.value.dark ? darkImg : lightImg, });
 
 const toggleTheme = () => {
   data.bgImage = theme.global.current.value.dark ? lightImg : darkImg;
