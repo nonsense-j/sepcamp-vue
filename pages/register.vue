@@ -113,12 +113,15 @@ export default {
   }),
   methods: {
     register() {
+      const global_store = store();
+      let priority = this.select === this.items[2] ? 2 : this.select === this.items[1] ? 1 : 0
       let user = {
         username: this.name,
         email: this.emailRe,
-        password: this.$encrypt(this.newPassword, this.rsa_pub_key)
+        password: this.$encrypt(this.newPassword, this.rsa_pub_key),
+        site_url: global_store.serverURL,
+        priority: priority
       }
-      const global_store = store();
       axios.post(global_store.serverURL + "register", user)
           .then(response => {
             if(response.status === 200) {
