@@ -86,10 +86,10 @@
   opacity: 0.6;
 }
 </style>
-<script>
-import workImg from '~/assets/image/homework.jpg'
-import ideaImg from '~/assets/image/ideas.jpg'
-import projImg from '~/assets/image/project.jpg'
+<script setup>
+import workimg from '~/assets/image/homework.jpg'
+import ideaimg from '~/assets/image/ideas.jpg'
+import projimg from '~/assets/image/project.jpg'
 
 definePageMeta({
   layout: "main",
@@ -97,23 +97,14 @@ definePageMeta({
 
 // TODO:
 //用户接口
-const user = {
-  userName: "Aurora",
-  priority: 0,
-  id: 1234,
-}
+const user = useUser();
 
-export default {
-  data: () => ({
-    show: false,
-    taskLink: user.priority ? "/task/manage" : "/task/taskflow",
-    projectLink: user.priority ? "/project/manage" : "/project/board",
-    notTeacher: !user.priority,
-    projText: user.priority ? "教师可以通过查看管理所有课程学生项目，对项目的提交情况以及功能点进度进行检查以及提供意见。" : "在开始进行你的项目之前，你需要首先在我的小队中进行组队。组队完成后可进入查看项目进度管理。",
-    workImg: workImg,
-    ideaImg: ideaImg,
-    projImg: projImg,
+const taskLink = user.value.priority ? "/task/manage" : "/task/taskflow";
+const projectLink = user.value.priority ? "/project/manage" : "/project/board";
+const notTeacher = !user.value.priority;
+const projText = user.value.priority ? "教师可以通过查看管理所有课程学生项目，对项目的提交情况以及功能点进度进行检查以及提供意见。" : "在开始进行你的项目之前，你需要首先在我的小队中进行组队。组队完成后可进入查看项目进度管理。";
+const workImg = workimg;
+const ideaImg = ideaimg;
+const projImg = projimg;
 
-  }),
-}
 </script>

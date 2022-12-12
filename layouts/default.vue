@@ -93,11 +93,7 @@ import { useTheme } from 'vuetify'
 
 // TODO:
 // 用户接口
-const user = {
-  userName: "Aurora",
-  priority: 0,
-  id: 1234,
-}
+const user = useUser();
 
 const theme = useTheme();
 let data = reactive({
@@ -111,8 +107,8 @@ let data = reactive({
 let taskLink = ref("/task/taskflow");
 let projectLink = ref("/project/board");
 let notTeacher = ref(true);
-if (user.userName.length !== 0) {
-  data.userName = user.userName;
+if (user.value.userName) {
+  data.userName = user.value.userName;
   data.userIcon = 'mdi-account-check-outline';
 }
 let userItems = ref([
@@ -122,7 +118,7 @@ let userItems = ref([
 
 
 // 老师--修改作业管理跳转，项目管理跳转以及修改用户登陆图标
-if (user.priority === 1 || user.priority === 2) {
+if (user.value.priority === 1 || user.value.priority === 2) {
   taskLink = "/task/manage";
   projectLink = "/project/manage"
   data.userIcon = 'mdi-account-key-outline';

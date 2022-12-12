@@ -23,7 +23,7 @@
       </v-text-field>
 
       <v-select prepend-icon="mdi-format-list-bulleted-type" variant="solo" v-model="select" :items="items"
-        :rules="[v => !!v || 'Item is required']" placeholder="课程角色" density="compact" required
+        :rules="[v => !!v || '需要选择你的课程角色']" placeholder="课程角色" density="compact" required
         class="mx-auto w-75 sec-border">
       </v-select>
 
