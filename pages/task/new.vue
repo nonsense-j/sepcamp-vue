@@ -1,0 +1,95 @@
+<template>
+  <v-sheet class="mx-auto blur main-sheet mt-3 mb-6 pa-4 d-flex flex-column pb-8" rounded="lg" elevation="6">
+    <div class="mx-auto mb-5">
+      <v-btn elevation="2" variant="outlined" size="x-large" prepend-icon="mdi-calendar">
+        <v-icon icon="mdi-circle-small" />
+        发布新作业
+        <v-icon icon="mdi-circle-small" />
+      </v-btn>
+    </div>
+    <div class="mx-auto">
+      <v-divider length="30%"></v-divider>
+    </div>
+    <div class="my-auto">
+      <div class="d-flex flex-row align-start px-10 justify-center">
+        <div class="text-h5 font-weight-bold text-no-wrap">
+          问题管理
+        </div>
+        <v-divider vertical class="mx-5" />
+        <div class="w-100">
+          <v-form v-model="valid" class="d-flex flex-column" lazy-validation>
+            <v-text-field v-for="(question, index) in contents" :key="index" v-model="contents[index]"
+              :rules="contentRules" :placeholder="question" density="comfortable" variant="outlined" color="primary"
+              clearable>
+            </v-text-field>
+            <div class="d-flex flex-row">
+              <v-text-field v-model="selectDate" :rules="contentRules" density="comfortable" variant="outlined"
+                bg-color="error" prepend-icon="mdi-calendar" placeholder="点击右侧日期选择器选择截止日期" disabled>
+              </v-text-field>
+              <Datepicker v-model="fullDate" class="mx-2 pt-1" :format="dateFormat"> </Datepicker>
+            </div>
+            <div>
+              <v-btn class="mx-3" color="info" size="large" append-icon="mdi-plus-circle" rounded="lg"
+                @click="contents.push('')">
+                增加问题
+              </v-btn>
+              <v-btn class="mx-3" color="warning" size="large" append-icon="mdi-minus-circle" rounded="lg"
+                @click="reduceQuest">
+                减少问题
+              </v-btn>
+              <NuxtLink to="/task/manage" class=" text-decoration-none">
+                <v-btn class="mx-3" color="primary" size="large" append-icon="mdi-arrow-right-drop-circle-outline"
+                  rounded="lg">
+                  发布作业
+                </v-btn>
+              </NuxtLink>
+            </div>
+          </v-form>
+        </div>
+      </div>
+    </div>
+  </v-sheet>
+</template>
+<style scoped>
+.blur {
+  -webkit-backdrop-filter: saturate(150%) blur(30px);
+  backdrop-filter: saturate(150%) blur(30px);
+}
+
+.text-btn {
+  cursor: default;
+}
+
+.main-sheet {
+  min-height: 80vh;
+  width: 96%;
+}
+</style>
+<script setup>
+import Datepicker from '@vuepic/vue-datepicker';
+
+const valid = ref(true);
+
+const contents = reactive(['',]);
+const contentRules = reactive([v => !!v || '问题内容不能为空']);
+
+const reduceQuest = () => {
+  if (contents.length > 1) {
+    contents.pop();
+  }
+};
+
+// date picker
+const fullDate = ref();
+let selectDate = ref();
+watch(fullDate, (newValue, oldValue) => {
+  selectDate = `${newValue.getFullYear()}${(newValue.getMonth() + 1)}${newValue.getDate()}`;
+});
+const dateFormat = (date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
+</script>

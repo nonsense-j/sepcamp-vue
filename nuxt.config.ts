@@ -1,8 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  css: ['vuetify/lib/styles/main.sass', '@mdi/font/css/materialdesignicons.min.css'],
+  ssr: false,
+  css: ['vuetify/lib/styles/main.sass', '@mdi/font/css/materialdesignicons.min.css', '@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss'],
   build: {
-    transpile: ['vuetify'],
+    transpile: ['vuetify', '@vuepic/vue-datepicker'],
   },
   vite: {
     define: {
