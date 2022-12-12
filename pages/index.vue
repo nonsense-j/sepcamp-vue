@@ -26,7 +26,7 @@
         </v-card-actions>
       </v-card>
     </v-hover>
-    <v-hover v-slot="{ isHovering, props }">
+    <v-hover v-slot="{ isHovering, props }" v-if="notTeacher">
       <v-card class="mx-auto mb-10" width="320px" :elevation="isHovering ? 24 : 10" v-bind="props">
         <v-img :src=ideaImg height="200px" cover></v-img>
 
@@ -60,7 +60,7 @@
         </v-card-title>
 
         <v-card-text class="card-subtext mx-2">
-          在开始进行你的项目之前，你需要首先在我的小队中进行组队。组队完成后可进入查看项目进度管理。
+          {{ projText }}
         </v-card-text>
         <v-divider length="80%" class="mx-4 mt-2"></v-divider>
 
@@ -95,10 +95,12 @@ definePageMeta({
   layout: "main",
 });
 
-// 用户接口
+// TODO:
+//用户接口
 const user = {
   userName: "Aurora",
   priority: 0,
+  id: 1234,
 }
 
 export default {
@@ -106,9 +108,12 @@ export default {
     show: false,
     taskLink: user.priority ? "/task/manage" : "/task/taskflow",
     projectLink: user.priority ? "/project/manage" : "/project/board",
+    notTeacher: !user.priority,
+    projText: user.priority ? "教师可以通过查看管理所有课程学生项目，对项目的提交情况以及功能点进度进行检查以及提供意见。" : "在开始进行你的项目之前，你需要首先在我的小队中进行组队。组队完成后可进入查看项目进度管理。",
     workImg: workImg,
     ideaImg: ideaImg,
     projImg: projImg,
+
   }),
 }
 </script>

@@ -10,12 +10,14 @@
           作业管理
         </v-btn>
       </NuxtLink>
-      <v-icon icon="mdi-circle-small" />
-      <NuxtLink to="/project/showall" class=" text-decoration-none" :style="{ color: `${data.textColor}` }">
-        <v-btn class="text-btn px-2">
-          项目广场
-        </v-btn>
-      </NuxtLink>
+      <div v-show="notTeacher">
+        <v-icon icon="mdi-circle-small" />
+        <NuxtLink to="/project/showall" class=" text-decoration-none" :style="{ color: `${data.textColor}` }">
+          <v-btn class="text-btn px-2">
+            项目广场
+          </v-btn>
+        </NuxtLink>
+      </div>
       <v-icon icon="mdi-circle-small" />
       <NuxtLink :to="projectLink" class=" text-decoration-none" :style="{ color: `${data.textColor}` }">
         <v-btn class="text-btn px-2">
@@ -33,7 +35,8 @@
           <v-list>
             <v-list-item v-for="(item, index) in userItems" :key="index" :value="index">
               <v-list-item-title class=" text-caption">
-                <NuxtLink :to=item.url class=" text-decoration-none" :style="{ color: `${data.textColor}` }">
+                <NuxtLink :to="`${item.url}?id=${user.id}`" class=" text-decoration-none"
+                  :style="{ color: `${data.textColor}` }">
                   {{ item.title }}
                 </NuxtLink>
               </v-list-item-title>
@@ -52,15 +55,8 @@
     </v-app-bar>
 
     <v-main>
-      <v-sheet class="mx-auto blur main-sheet mt-3 pa-4" rounded="lg" elevation="6">
-        <slot />
-      </v-sheet>
+      <slot />
     </v-main>
-    <v-footer class="d-flex flex-column my-4">
-      <div class="w-100">
-        <v-divider length="20%" class="mx-auto"></v-divider>
-      </div>
-    </v-footer>
 
   </v-app>
 
@@ -91,20 +87,16 @@
   width: 90% !important;
   margin-left: 5%;
 }
-
-.main-sheet {
-  width: 96%;
-  margin-top: -30vh;
-  min-height: 400px;
-}
 </style>
 <script setup>
 import { useTheme } from 'vuetify'
 
+// TODO:
 // 用户接口
 const user = {
   userName: "Aurora",
   priority: 0,
+  id: 1234,
 }
 
 const theme = useTheme();
@@ -114,26 +106,28 @@ let data = reactive({
   userName: '未登录',
   textColor: theme.global.current.value.dark ? 'white' : 'black',
 });
-let icons = ref([
-  { name: "mdi-qqchat", tip: "3225910772" },
-  { name: "mdi-email", tip: "3225910772@qq.com" },
-  { name: "mdi-github", tip: "nonsense-j/sepcamp-vue" }
-]);
-let userItems = ref([
-  { title: '个人信息', url: '/info/profile' },
-  { title: '我的小队', url: '/info/group' }
-]);
+
+// 默认使用学生登录导航栏
 let taskLink = ref("/task/taskflow");
 let projectLink = ref("/project/board");
+let notTeacher = ref(true);
 if (user.userName.length !== 0) {
   data.userName = user.userName;
   data.userIcon = 'mdi-account-check-outline';
 }
+let userItems = ref([
+  { title: '个人信息', url: '/info/profile' },
+  { title: '我的小队', url: '/info/group' }
+]);
+
+
 // 老师--修改作业管理跳转，项目管理跳转以及修改用户登陆图标
-if (user.priority === 1) {
+if (user.priority === 1 || user.priority === 2) {
   taskLink = "/task/manage";
   projectLink = "/project/manage"
   data.userIcon = 'mdi-account-key-outline';
+  userItems = [{ title: '个人信息', url: '/info/profile' }];
+  notTeacher = false;
 }
 
 const toggleTheme = () => {

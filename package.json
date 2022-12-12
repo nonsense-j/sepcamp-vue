@@ -11,7 +11,9 @@
     "nuxt": "3.0.0"
   },
   "dependencies": {
+    "@jsdawn/vue3-tinymce": "^2.0.4",
     "@mdi/font": "^7.0.96",
+    "@vuepic/vue-datepicker": "^3.6.3",
     "sass": "^1.56.1",
     "vuetify": "^3.0.1"
   }
