@@ -43,7 +43,7 @@
               </v-btn>
               <NuxtLink to="/task/manage" class=" text-decoration-none">
                 <v-btn class="mx-3" color="primary" size="large" append-icon="mdi-arrow-right-drop-circle-outline"
-                  rounded="lg">
+                  rounded="lg" @click="createTask">
                   发布作业
                 </v-btn>
               </NuxtLink>
@@ -71,6 +71,8 @@
 </style>
 <script setup>
 import Datepicker from '@vuepic/vue-datepicker';
+import {store} from "~/store/store";
+import axios from "axios";
 
 const valid = ref(true);
 const contents = reactive(['',]);
@@ -85,6 +87,7 @@ const reduceQuest = () => {
 // date picker
 const fullDate = ref();
 let selectDate = ref();
+let selectDate2 = ref();
 const select = ref();
 const taskTypes = ["课堂作业", "课后作业"];
 watch(fullDate, (newValue, oldValue) => {
@@ -92,6 +95,7 @@ watch(fullDate, (newValue, oldValue) => {
   const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
   const day = newValue.getDate().toString().padStart(2, '0');
   selectDate = year + month + day;
+  selectDate2 =  year + "-" + month + "-" + day;
 });
 const dateFormat = (date) => {
   const year = date.getFullYear().toString();
@@ -100,64 +104,37 @@ const dateFormat = (date) => {
 
   return year + month + day;
 }
-</script>
-<script>
 
-import {store} from "~/store/store";
-import axios from "axios";
+const createTask = () => {
+  const global_store = store()
+  let task = new FormData()
+  let timestamp=new Date().getTime()
+  let DescribeText = contents.join("^")
+  let enddate = new Date(selectDate2)
+  task.append('DescribeText',DescribeText)
+  task.append('StartTime', timestamp)
+  task.append('EndTime',  enddate)
+  task.append('Term', '20222')
 
-export default {
-  data: () => ({
-    loading: [],
-    visible: false,
-    valid: true,
-    email: '',
-
-  }),
-  methods: {
-    load(i) {
-      this.loading[i] = true
-      setTimeout(() => (this.loading[i] = false), 3000)
-    },
-    initData(){
-      alert("yes")
-    },
-    created(){
-      this.initData()
-    },
-    createTask() {
-      this.loading[1] = true
-      const global_store = store()
-      let task = new FormData()
-      var timestamp=new Date().getTime()
-      var DescribeText = contents.join("")
-      task.append('DescribeText', this.email)
-      task.append('StartTime', timestamp)
-      task.append('EndTime', this.email)
-      task.append('Term', '20222')
-
-      axios.defaults.headers['authorization'] = global_store.token;
-      axios.post(global_store.serverURL + "homework/create", task)
-          .then(response => {
-            if(response.status === 200) {
-              // TODO: deal with  success
-              let result = response.data
-              if(result.success === true) {
-                // login success
-                alert('作业添加成功')
-              }
-              else {
-                alert(result.message)
-              }
-            } else {
-              console.log(response)
-            }
-          })
-          .catch(error => {
-            console.error(error)
-          })
-      this.loading[1] = false
-    }
-  },
+  axios.defaults.headers['authorization'] = global_store.token;
+  axios.post(global_store.serverURL + "homework/create", task)
+      .then(response => {
+        if(response.status === 200) {
+          // TODO: deal with  success
+          let result = response.data
+          if(result.success === true) {
+            // login success
+            alert('作业添加成功')
+          }
+          else {
+            alert(result.message)
+          }
+        } else {
+          console.log(response)
+        }
+      })
+      .catch(error => {
+        console.error(error)
+      })
 }
 </script>
