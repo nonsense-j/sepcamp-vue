@@ -109,8 +109,8 @@ let data = reactive({
 let taskLink = ref("/task/taskflow");
 let projectLink = ref("/project/board");
 let notTeacher = ref(true);
-if (user.value.userName) {
-  data.userName = user.value.userName;
+if (user.userName) {
+  data.userName = user.userName;
   data.userIcon = 'mdi-account-check-outline';
 }
 let userItems = ref([
@@ -120,7 +120,7 @@ let userItems = ref([
 
 
 // 老师--修改作业管理跳转，项目管理跳转以及修改用户登陆图标
-if (user.value.priority === 1 || user.value.priority === 2) {
+if (user.priority === 1 || user.priority === 2) {
   taskLink = "/task/manage";
   projectLink = "/project/manage"
   data.userIcon = 'mdi-account-key-outline';
