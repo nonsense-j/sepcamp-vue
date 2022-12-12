@@ -96,8 +96,6 @@ definePageMeta({
   layout: "main",
 });
 
-// TODO:
-//用户接口
 const user = {
   userName: store().username,
   priority: store().priority,

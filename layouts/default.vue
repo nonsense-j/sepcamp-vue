@@ -92,7 +92,6 @@
 import { useTheme } from 'vuetify'
 import {store} from "~/store/store";
 
-// 用户接口
 const user = {
   userName: store().username,
   priority: store().priority,

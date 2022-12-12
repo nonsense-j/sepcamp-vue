@@ -69,7 +69,6 @@
 import Datepicker from '@vuepic/vue-datepicker';
 
 const valid = ref(true);
-
 const contents = reactive(['',]);
 const contentRules = reactive([v => !!v || '问题内容不能为空']);
 
@@ -91,5 +90,65 @@ const dateFormat = (date) => {
   const year = date.getFullYear();
 
   return `${day}/${month}/${year}`;
+}
+</script>
+<script>
+
+import {store} from "~/store/store";
+import axios from "axios";
+
+export default {
+  data: () => ({
+    loading: [],
+    visible: false,
+    valid: true,
+    email: '',
+
+  }),
+  methods: {
+    load(i) {
+      this.loading[i] = true
+      setTimeout(() => (this.loading[i] = false), 3000)
+    },
+    initData(){
+      alert("yes")
+    },
+    created(){
+      this.initData()
+    },
+    createTask() {
+      this.loading[1] = true
+      const global_store = store()
+      let task = new FormData()
+      var timestamp=new Date().getTime()
+      var DescribeText = contents.join("")
+      task.append('DescribeText', this.email)
+      task.append('StartTime', timestamp)
+      task.append('EndTime', this.email)
+      task.append('Term', '20222')
+
+      axios.defaults.headers['authorization'] = global_store.token;
+      axios.post(global_store.serverURL + "homework/create", task)
+          .then(response => {
+            if(response.status === 200) {
+              // TODO: deal with  success
+              let result = response.data
+              if(result.success === true) {
+                // login success
+                alert('作业添加成功')
+              }
+              else {
+                alert(result.message)
+              }
+            } else {
+              console.log(response)
+            }
+          })
+          .catch(error => {
+            console.error(error)
+          })
+      this.loading[1] = false
+    }
+  },
 }
 </script>

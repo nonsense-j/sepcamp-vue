@@ -129,8 +129,6 @@ import { useTheme } from 'vuetify'
 import bgImg from '~/assets/image/board.jpg'
 import {store} from "~/store/store";
 
-// TODO:
-// 用户接口
 const user = {
   userName: store().username,
   priority: store().priority,
