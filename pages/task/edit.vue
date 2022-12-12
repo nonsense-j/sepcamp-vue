@@ -63,36 +63,38 @@
           待评分
         </div>
         <v-container>
-          <v-row justify="center">
-            <v-col v-for="n in 23" :key="n" cols="auto">
-              <v-card height="130" width="200" elevation="6">
-                <v-card-title class="bg-primary"></v-card-title>
-                <v-card-item class="py-1">
-                  <div>
-                    <div class="text-overline mb-1">
-                      HOMEWORK
+          <div class="d-flex flex-row flex-wrap justify-center">
+            <v-card v-for="(record, index) in unEvaluatedRecords" :key="index" height="130" width="200" elevation="6"
+              class="mb-3 mx-3">
+              <v-card-title class="bg-primary"></v-card-title>
+              <v-card-item class="py-1">
+                <div>
+                  <div class="text-overline mb-1">
+                    HOMEWORK
+                  </div>
+                  <div class="d-flex flex-row">
+                    <div class="text-caption">
+                      <v-icon icon="mdi-account-school-outline" class="mr-1" />{{ record.userName }}
                     </div>
-                    <div class="d-flex flex-row">
-                      <div class="text-caption">
-                        <v-icon icon="mdi-account-school-outline" class="mr-1" />用户名
-                      </div>
-                      <v-spacer></v-spacer>
-                      <div class="text-caption">
-                        <v-icon icon="mdi-star-outline" class="mr-1" />--
-                      </div>
+                    <v-spacer></v-spacer>
+                    <div class="text-caption">
+                      <!-- TODO: -->
+                      <v-icon icon="mdi-star-outline" class="mr-1" />---
                     </div>
                   </div>
-                </v-card-item>
-                <v-card-actions class="py-0">
-                  <NuxtLink to="/" class=" text-decoration-none">
-                    <v-btn color="primary" variant="text" density="comfortable" prepend-icon="mdi-chevron-double-right">
-                      查看详情
-                    </v-btn>
-                  </NuxtLink>
-                </v-card-actions>
-              </v-card>
-            </v-col>
-          </v-row>
+                </div>
+              </v-card-item>
+              <v-card-actions class="py-0">
+                <!-- TODO: -->
+                <NuxtLink :to="`/task/evaluate?date=${task.date}&type=${task.type}&user=${record.userID}`"
+                  class=" text-decoration-none">
+                  <v-btn color="primary" variant="text" density="comfortable" prepend-icon="mdi-chevron-double-right">
+                    查看详情
+                  </v-btn>
+                </NuxtLink>
+              </v-card-actions>
+            </v-card>
+          </div>
         </v-container>
       </div>
       <div class="d-flex flex-column align-start px-10 justify-center my-6">
@@ -100,36 +102,38 @@
           已评分
         </div>
         <v-container>
-          <v-row justify="center">
-            <v-col v-for="n in 24" :key="n" cols="auto">
-              <v-card height="130" width="200" elevation="6">
-                <v-card-title class="bg-success"></v-card-title>
-                <v-card-item class="py-1">
-                  <div>
-                    <div class="text-overline mb-1">
-                      HOMEWORK
+          <div class="d-flex flex-row flex-wrap justify-center">
+            <v-card v-for="(record, index) in EvaluatedRecords" :key="index" height="130" width="200" elevation="6"
+              class="mb-3 mx-3">
+              <v-card-title class="bg-success"></v-card-title>
+              <v-card-item class="py-1">
+                <div>
+                  <div class="text-overline mb-1">
+                    HOMEWORK
+                  </div>
+                  <div class="d-flex flex-row">
+                    <div class="text-caption">
+                      <v-icon icon="mdi-account-school-outline" class="mr-1" />{{ record.userName }}
                     </div>
-                    <div class="d-flex flex-row">
-                      <div class="text-caption">
-                        <v-icon icon="mdi-account-school-outline" class="mr-1" />用户名
-                      </div>
-                      <v-spacer></v-spacer>
-                      <div class="text-caption">
-                        <v-icon icon="mdi-star-outline" class="mr-1" />100
-                      </div>
+                    <v-spacer></v-spacer>
+                    <div class="text-caption">
+                      <!-- TODO: -->
+                      <v-icon icon="mdi-star-outline" class="mr-1" />{{ record.score }}
                     </div>
                   </div>
-                </v-card-item>
-                <v-card-actions class="py-0">
-                  <NuxtLink to="/" class=" text-decoration-none">
-                    <v-btn color="success" variant="text" density="comfortable" prepend-icon="mdi-chevron-double-right">
-                      查看详情
-                    </v-btn>
-                  </NuxtLink>
-                </v-card-actions>
-              </v-card>
-            </v-col>
-          </v-row>
+                </div>
+              </v-card-item>
+              <v-card-actions class="py-0">
+                <!-- TODO: -->
+                <NuxtLink :to="`/task/evaluate?date=${task.date}&type=${task.type}&user=${record.userID}`"
+                  class=" text-decoration-none">
+                  <v-btn color="success" variant="text" density="comfortable" prepend-icon="mdi-chevron-double-right">
+                    查看详情
+                  </v-btn>
+                </NuxtLink>
+              </v-card-actions>
+            </v-card>
+          </div>
         </v-container>
       </div>
     </div>
@@ -159,7 +163,8 @@ const expireColor = { true: "info", false: "error" };
 const valid = ref(true);
 const lockEdit = ref(true);
 
-// 接口
+// TODO:
+// task接口
 const task = {
   date: '20221107',
   type: 1,
@@ -167,6 +172,26 @@ const task = {
   expireDate: '20221214',
   submitStatus: 1,
 };
+// 作业集接口
+let unEvaluatedRecords = [];
+let EvaluatedRecords = [];
+for (let index = 0; index < 24; index++) {
+  let user1 = {
+    userName: `学生-${index}`,
+    priority: 0,
+    userID: 1000 + index,
+    score: 0,
+  };
+  let user2 = {
+    userName: `学生-${index + 24}`,
+    priority: 0,
+    id: 1000 + index,
+    score: 100 - index,
+  };
+  EvaluatedRecords.push(user2);
+  unEvaluatedRecords.push(user1);
+}
+
 
 const contents = ref(Array(task.questions.length).fill(''));
 const contentRules = reactive([v => !!v || '问题内容不能为空']);

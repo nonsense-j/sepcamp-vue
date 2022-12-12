@@ -23,8 +23,12 @@
               clearable>
             </v-text-field>
             <div class="d-flex flex-row">
+              <v-select prepend-icon="mdi-format-list-bulleted-type" variant="outlined" v-model="select"
+                :items="taskTypes" :rules="[v => !!v || '作业类型必选']" placeholder="作业类型" density="compact" class="mr-5"
+                required>
+              </v-select>
               <v-text-field v-model="selectDate" :rules="contentRules" density="comfortable" variant="outlined"
-                bg-color="error" prepend-icon="mdi-calendar" placeholder="点击右侧日期选择器选择截止日期" disabled>
+                prepend-icon="mdi-calendar" placeholder="点击右侧日期选择器选择截止日期">
               </v-text-field>
               <Datepicker v-model="fullDate" class="mx-2 pt-1" :format="dateFormat"> </Datepicker>
             </div>
@@ -81,15 +85,20 @@ const reduceQuest = () => {
 // date picker
 const fullDate = ref();
 let selectDate = ref();
+const select = ref();
+const taskTypes = ["课堂作业", "课后作业"];
 watch(fullDate, (newValue, oldValue) => {
-  selectDate = `${newValue.getFullYear()}${(newValue.getMonth() + 1)}${newValue.getDate()}`;
+  const year = newValue.getFullYear().toString();
+  const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
+  const day = newValue.getDate().toString().padStart(2, '0');
+  selectDate = year + month + day;
 });
 const dateFormat = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
 
-  return `${day}/${month}/${year}`;
+  return year + month + day;
 }
 </script>
 <script>
