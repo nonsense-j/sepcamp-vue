@@ -126,7 +126,14 @@ export default {
           .then(response => {
             if(response.status === 200) {
               // TODO: deal with login success
-              console.log(response)
+              let result = response.data
+              if(result.success === true) {
+                alert('注册成功！请前往邮箱进行验证')
+                this.$router.push('/')
+              }
+              else {
+                alert('注册失败，'+ result.message)
+              }
             }
             else {
               // TODO: deal with other response code
