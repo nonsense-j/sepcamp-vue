@@ -122,12 +122,10 @@ const userInfo = reactive({
 })
 let global_store = store()
 axios.defaults.headers['authorization'] = global_store.token;
-alert(global_store.userID)
-axios.post(global_store.serverURL + "userinfo/getUserInformation", {userId: global_store.userID})
+axios.post(global_store.serverURL + "userinfo/getUserInformation", {user_id: global_store.userID})
     .then(response => {
       let data = response.data
-
-      axios.post(global_store.serverURL + "team/getTeamById", {teamId: data.team_id})
+      axios.post(global_store.serverURL + "team/getTeamById", {team_id: data.team_id})
           .then(response => {
             let data2= response.data
             userInfo.groupName = data2.team_name

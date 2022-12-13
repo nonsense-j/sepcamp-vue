@@ -134,20 +134,22 @@ const group = reactive({
 
 let global_store = store()
 axios.defaults.headers['authorization'] = global_store.token;
-axios.post(global_store.serverURL + "team/getTeamById", {team_id: user.groupID})
+axios.post(global_store.serverURL + "team/getTeamById", {team_id: global_store.groupID})
     .then(response => {
       let data = response.data
       group.groupID = data.team_id
       group.groupName = data.team_name
       group.term = data.term
 
-      axios.post(global_store.serverURL + "project/getProject", {projectId: data.project_id})
+      alert(data.project_id)
+
+      axios.post(global_store.serverURL + "project/getProject", {project_id: data.project_id})
           .then(response => {
             let data2= response.data
             group.ProjName = data2.project_name
           })
 
-      axios.post(global_store.serverURL + "team/GetTeamMember", {projectId: data.project_id})
+      axios.post(global_store.serverURL + "team/GetTeamMember", {project_id: data.project_id})
           .then(response => {
             let data3= response.data
 
@@ -161,6 +163,11 @@ const exitGroup = () => {
   if (confirm("是否确认退出当前小组？")) {
     // TODO
     // 访问后端 store().groupID=-1
+    axios.post(global_store.serverURL + "team/DropOutOfLine", {user_id: global_store.userID})
+        .then(response => {
+        })
+
+
     router.push("/info/nogroup");
   }
 }
