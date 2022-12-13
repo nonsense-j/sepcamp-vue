@@ -8,7 +8,7 @@
           <v-card-item class="py-1">
             <div>
               <div class="text-overline mb-1">
-                {{ project.project_name }}
+                {{ project.team_name }}
               </div>
               <div class="d-flex flex-column">
                   <div class="text-caption">
@@ -24,7 +24,7 @@
           </v-card-item>
           <v-card-actions class="py-0">
             <!-- TODO: -->
-            <NuxtLink :to="``"
+            <NuxtLink :to="`/info/group?id=${project.team_id}`"
                       class=" text-decoration-none">
               <v-btn color="teal" variant="text" density="comfortable" prepend-icon="mdi-chevron-double-right">
                 查看详情
@@ -41,7 +41,7 @@ import axios from "axios";
 import {store} from "~/store/store";
 
 const Projects = reactive([{
-  project_name: 'test',
+  team_name: 'test',
   team_leader: 'admin',
   introduction: 'this is an introduction',
   team_members: 3,
@@ -51,7 +51,19 @@ const Projects = reactive([{
 const global_store = store()
 
 axios.defaults.headers['authorization'] = global_store.token
-axios.post(global_store.serverURL)
+axios.get(global_store.serverURL + 'team/GetAllTeamInfo')
+    .then(response => {
+      let datas = response.data
+      for(let i = 0; i < datas.length; i ++) {
+        Projects.push({
+          team_name: datas[i].team_name,
+          team_leader: datas[i].team_leader,
+          introduction: datas[i].introduction,
+          team_members: datas[i].team_members,
+          team_id: datas[i].team_id
+        })
+      }
+    })
 </script>
 <script>
 definePageMeta({
