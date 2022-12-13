@@ -75,7 +75,7 @@
                 <!-- TODO: -->
                 <!-- 点击提交信息回到小组信息页并且刷新 -->
                 <NuxtLink :to="`/info/profile?id=${$route.query.id}`" class=" text-decoration-none">
-                  <v-btn color="info" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg">
+                  <v-btn color="info" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg" @click="submitMessage">
                     提交信息
                   </v-btn>
                 </NuxtLink>
@@ -134,12 +134,18 @@ axios.defaults.headers['authorization'] = global_store.token;
 axios.post(global_store.serverURL + "userinfo/getUserInformation", {user_id: global_store.userID})
     .then(response => {
       let data = response.data
-      userInfo.introduction = data.Introduction
+      userInfo.interests = data.interests.split('\u0001')
+      newInterests = data.interests.split('\u0001')
+      userInfo.introduction = data.introduction
+      userInfo.qqAccount =data.qqnumber
+
       axios.post(global_store.serverURL + "team/getTeamById", {team_id: data.team_id})
           .then(response => {
             let data2= response.data
             userInfo.groupName = data2.team_name
+
           })
+
     })
 
 const valid = ref(true);
@@ -158,6 +164,31 @@ const addInterest = () => {
   }
   else
     nullInterest.value = true;
+}
+
+const submitMessage = () => {
+  axios.defaults.headers['authorization'] = global_store.token;
+  axios.post(global_store.serverURL + "userinfo/changeUserInformation", {
+    user_id: global_store.userID,
+    interests:newInterests.join("\u0001"),
+    introduction:userInfo.introduction,
+    qqnumber:userInfo.qqAccount,
+  }).then(response => {
+
+    if(response.status === 200) {
+      let result = response.data
+      if(result.success === true) {
+        alert('个人信息修改成功')
+      }
+      else {
+        alert(result.message)
+      }
+    } else {
+      console.log(response)
+    }
+  })
+
+
 }
 
 const backPage = () => {
