@@ -213,7 +213,6 @@ axios.defaults.headers['authorization'] = global_store.token;
 axios.post(global_store.serverURL + "homework/getOneList", {homework_Id: homework_id})
     .then(response => {
       let data = response.data
-      console.log(data)
       task.date = data[0].start_Time
       task.type = data[0].homework_Type
       task.questions = data[0].describe_Text.split('\u0001')
@@ -244,7 +243,6 @@ axios.post(global_store.serverURL + "homework/getOneList", {homework_Id: homewor
                 })
               }
             }
-            console.log(EvaluatedRecords[0])
           })
     })
 

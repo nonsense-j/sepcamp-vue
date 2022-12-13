@@ -113,6 +113,7 @@ export default {
   }),
   methods: {
     register() {
+      this.loading[2] = true
       const global_store = store();
       let priority = this.select === this.items[2] ? 2 : this.select === this.items[1] ? 1 : 0
       let user = {
@@ -124,24 +125,29 @@ export default {
       }
       axios.post(global_store.serverURL + "register", user)
           .then(response => {
+            console.log(response.data)
             if(response.status === 200) {
               // TODO: deal with login success
               let result = response.data
               if(result.success === true) {
+                this.loading[2] = false
                 alert('注册成功！请前往邮箱进行验证')
-                this.$router.push('/')
+                this.$router.push('/login')
               }
               else {
+                this.loading[2] = false
                 alert('注册失败，'+ result.message)
               }
             }
             else {
               // TODO: deal with other response code
+              this.loading[2] = false
               console.log(response)
             }
           })
           .catch(error => {
             // TODO: deal with error
+            this.loading[2] = false
             console.error(error)
           })
     },

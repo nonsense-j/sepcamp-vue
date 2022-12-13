@@ -89,17 +89,6 @@ let tasks = reactive([])
 axios.defaults.headers['authorization'] = store().token
 axios.post(store().serverURL + "homework/getAllList", {term:"20222"})
     .then(response => {
-      /*
-      console.log(tasks)
-      tasks[0] = {
-        date: '20221212',
-        type: 2,
-        questions: ["如果已知一个Web应用的所有源代码，你将如何进行安全加固?"],
-        expireDate: '20221219',
-        submitStatus: 0,
-      }
-      console.log(tasks)
-      */
       let data = response.data
       for(let i = 0; i < data.length; i ++) {
         tasks.push({

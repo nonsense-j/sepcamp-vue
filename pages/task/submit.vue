@@ -99,7 +99,6 @@ axios.defaults.headers['authorization'] = global_store.token;
 axios.post(global_store.serverURL + "homework/getOne", {homework_Id: homework_id})
     .then(response => {
       let data = response.data
-      console.log(data)
       task.date = data.start_Time
       task.type = data.homework_Type
       task.questions = data.describe_Text.split('\u0001')
@@ -151,7 +150,6 @@ const snackbar = ref(true);
 const router = useRouter();
 const checkText = () => {
   for (let i = 0; i < task.questions.length; i++) {
-    console.log(contents.value[i])
     if (!contents.value[i]) {
       alert("除了反馈建议，每一个问题都不能空白提交！");
       return;
