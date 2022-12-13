@@ -73,7 +73,7 @@
 </style>
 <script setup>
 import axios from "axios";
-import {store} from "~/store/store";
+import { store } from "~/store/store";
 
 definePageMeta({
   layout: "default",
@@ -84,30 +84,29 @@ const typeNames = { '1': "课堂作业", '2': "课后作业" };
 const checkExpire = { true: "未截止", false: "已截止" };
 const expireColor = { true: "info", false: "error" };
 
-let tasks = reactive([])
+// let tasks = reactive([])
 
-axios.defaults.headers['authorization'] = store().token
-axios.post(store().serverURL + "homework/getOneList", 1)
-    .then(response => {
-      /*
-      console.log(tasks)
-      tasks[0] = {
-        date: '20221212',
-        type: 2,
-        questions: ["如果已知一个Web应用的所有源代码，你将如何进行安全加固?"],
-        expireDate: '20221219',
-        submitStatus: 0,
-      }
-      console.log(tasks)
-      */
-      console.log(response)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+// axios.defaults.headers['authorization'] = store().token
+// axios.post(store().serverURL + "homework/getOneList", 1)
+//     .then(response => {
+//       /*
+//       console.log(tasks)
+//       tasks[0] = {
+//         date: '20221212',
+//         type: 2,
+//         questions: ["如果已知一个Web应用的所有源代码，你将如何进行安全加固?"],
+//         expireDate: '20221219',
+//         submitStatus: 0,
+//       }
+//       console.log(tasks)
+//       */
+//       console.log(response)
+//     })
+//     .catch(error => {
+//       console.log(error)
+//     })
 
 // 任务接口 type(1课堂作业，2课后作业)
-/*
 const tasks = ref([
   {
     date: '20221212',
@@ -135,7 +134,6 @@ const tasks = ref([
     submitStatus: 1,
   },
 ]);
-*/
 
 let now = new Date();
 const year = now.getFullYear().toString();

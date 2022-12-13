@@ -35,7 +35,7 @@
           <v-list>
             <v-list-item v-for="(item, index) in userItems" :key="index" :value="index">
               <v-list-item-title class=" text-caption">
-                <NuxtLink :to="`${item.url}?id=${user.id}`" class=" text-decoration-none"
+                <NuxtLink :to="`${item.url}?id=${idList[index]}`" class=" text-decoration-none"
                   :style="{ color: `${data.textColor}` }">
                   {{ item.title }}
                 </NuxtLink>
@@ -90,12 +90,15 @@
 </style>
 <script setup>
 import { useTheme } from 'vuetify'
-import {store} from "~/store/store";
+import { store } from "~/store/store";
 
 const user = {
   userName: store().username,
   priority: store().priority,
+  userID: store().userID,
+  groupID: store().groupID,
 }
+const idList = ref([user.userID, user.groupID]);
 
 const theme = useTheme();
 let data = reactive({
@@ -109,7 +112,7 @@ let data = reactive({
 let taskLink = ref("/task/taskflow");
 let projectLink = ref("/project/board");
 let notTeacher = ref(true);
-if (user.userName) {
+if (user.priority !== -1) {
   data.userName = user.userName;
   data.userIcon = 'mdi-account-check-outline';
 }

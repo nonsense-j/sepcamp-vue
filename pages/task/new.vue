@@ -22,15 +22,23 @@
               :rules="contentRules" :placeholder="question" density="comfortable" variant="outlined" color="primary"
               clearable>
             </v-text-field>
-            <div class="d-flex flex-row">
+            <div class="item-length">
               <v-select prepend-icon="mdi-format-list-bulleted-type" variant="outlined" v-model="select"
                 :items="taskTypes" :rules="[v => !!v || '作业类型必选']" placeholder="作业类型" density="compact" class="mr-5"
                 required>
               </v-select>
-              <v-text-field v-model="selectDate" :rules="contentRules" density="comfortable" variant="outlined"
-                prepend-icon="mdi-calendar" placeholder="点击右侧日期选择器选择截止日期">
+            </div>
+            <div class="d-flex flex-row date-length">
+              <v-text-field v-model="selectDate" :rules="contentRules" density="compact" variant="outlined"
+                prepend-icon="mdi-calendar" placeholder="点击右侧日期选择器选择作业对应的课程时间" disabled>
               </v-text-field>
-              <Datepicker v-model="fullDate" class="mx-2 pt-1" :format="dateFormat"> </Datepicker>
+              <Datepicker v-model="fullSelectDate" class="mx-2 w-25" :format="dateFormat"> </Datepicker>
+            </div>
+            <div class="d-flex flex-row date-length">
+              <v-text-field v-model="expireDate" :rules="contentRules" density="compact" variant="outlined"
+                prepend-icon="mdi-calendar-clock" placeholder="点击右侧日期选择器选择作业截止时间" disabled>
+              </v-text-field>
+              <Datepicker v-model="fullExpireDate" class="mx-2 w-25" :format="dateFormat"> </Datepicker>
             </div>
             <div>
               <v-btn class="mx-3" color="info" size="large" append-icon="mdi-plus-circle" rounded="lg"
@@ -64,6 +72,15 @@
   cursor: default;
 }
 
+.item-length {
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.date-length {
+  width: 550px;
+}
+
 .main-sheet {
   min-height: 80vh;
   width: 96%;
@@ -83,15 +100,23 @@ const reduceQuest = () => {
 };
 
 // date picker
-const fullDate = ref();
+const fullSelectDate = ref();
+const fullExpireDate = ref();
 let selectDate = ref();
+let expireDate = ref();
 const select = ref();
 const taskTypes = ["课堂作业", "课后作业"];
-watch(fullDate, (newValue, oldValue) => {
+watch(fullSelectDate, (newValue, oldValue) => {
   const year = newValue.getFullYear().toString();
   const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
   const day = newValue.getDate().toString().padStart(2, '0');
   selectDate = year + month + day;
+});
+watch(fullExpireDate, (newValue, oldValue) => {
+  const year = newValue.getFullYear().toString();
+  const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
+  const day = newValue.getDate().toString().padStart(2, '0');
+  expireDate = year + month + day;
 });
 const dateFormat = (date) => {
   const year = date.getFullYear().toString();
@@ -103,7 +128,7 @@ const dateFormat = (date) => {
 </script>
 <script>
 
-import {store} from "~/store/store";
+import { store } from "~/store/store";
 import axios from "axios";
 
 export default {
@@ -119,17 +144,17 @@ export default {
       this.loading[i] = true
       setTimeout(() => (this.loading[i] = false), 3000)
     },
-    initData(){
+    initData() {
       alert("yes")
     },
-    created(){
+    created() {
       this.initData()
     },
     createTask() {
       this.loading[1] = true
       const global_store = store()
       let task = new FormData()
-      var timestamp=new Date().getTime()
+      var timestamp = new Date().getTime()
       var DescribeText = contents.join("")
       task.append('DescribeText', this.email)
       task.append('StartTime', timestamp)
@@ -138,24 +163,24 @@ export default {
 
       axios.defaults.headers['authorization'] = global_store.token;
       axios.post(global_store.serverURL + "homework/create", task)
-          .then(response => {
-            if(response.status === 200) {
-              // TODO: deal with  success
-              let result = response.data
-              if(result.success === true) {
-                // login success
-                alert('作业添加成功')
-              }
-              else {
-                alert(result.message)
-              }
-            } else {
-              console.log(response)
+        .then(response => {
+          if (response.status === 200) {
+            // TODO: deal with  success
+            let result = response.data
+            if (result.success === true) {
+              // login success
+              alert('作业添加成功')
             }
-          })
-          .catch(error => {
-            console.error(error)
-          })
+            else {
+              alert(result.message)
+            }
+          } else {
+            console.log(response)
+          }
+        })
+        .catch(error => {
+          console.error(error)
+        })
       this.loading[1] = false
     }
   },

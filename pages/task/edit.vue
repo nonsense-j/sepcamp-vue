@@ -15,27 +15,46 @@
     <div class="my-auto">
       <div class="d-flex flex-row align-start px-10 justify-center">
         <div class="text-h5 font-weight-bold text-no-wrap">
-          问题管理
+          作业信息
         </div>
         <v-divider vertical class="mx-5" />
         <div class="w-100">
+          <div v-if="lockEdit">
+            <v-responsive v-for="(question, index) in task.questions" :key="index" class="border mt-3 px-2 py-3">
+              <v-icon icon="mdi-circle-small" />{{ question }}
+            </v-responsive>
+          </div>
           <v-form v-model="valid" class="d-flex flex-column" lazy-validation>
-            <v-text-field v-for="(question, index) in task.questions" :key="index" v-model="contents[index]"
-              :rules="contentRules" :placeholder="question" density="comfortable" variant="outlined" color="primary"
-              clearable :disabled="lockEdit">
-            </v-text-field>
-            <div class="d-flex flex-row">
-              <v-text-field v-model="selectDate" :rules="contentRules" density="comfortable" variant="outlined"
-                bg-color="error" prepend-inner-icon="mdi-calendar" disabled>
+            <div v-if="!lockEdit">
+              <v-text-field v-for="(content, index) in contents" :key="index" v-model="contents[index]"
+                :rules="contentRules" :placeholder="content" density="comfortable" variant="outlined" color="primary"
+                clearable :disabled="lockEdit">
               </v-text-field>
-              <Datepicker v-model="fullDate" class="mx-2 pt-1" :format="dateFormat" :disabled="lockEdit"> </Datepicker>
+              <div class="item-length">
+                <v-select prepend-icon="mdi-format-list-bulleted-type" variant="outlined" v-model="select"
+                  :items="taskTypes" :rules="[v => !!v || '作业类型必选']" placeholder="作业类型" density="compact" class="mr-5"
+                  required>
+                </v-select>
+              </div>
+              <div class="d-flex flex-row date-length">
+                <v-text-field v-model="selectDate" :rules="contentRules" density="compact" variant="outlined"
+                  prepend-icon="mdi-calendar" :placeholder="task.date" disabled>
+                </v-text-field>
+                <Datepicker v-model="fullSelectDate" class="mx-2 w-25" :format="dateFormat"> </Datepicker>
+              </div>
+              <div class="d-flex flex-row date-length">
+                <v-text-field v-model="expireDate" :rules="contentRules" density="compact" variant="outlined"
+                  prepend-icon="mdi-calendar-clock" :placeholder="task.expireDate" disabled>
+                </v-text-field>
+                <Datepicker v-model="fullExpireDate" class="mx-2 w-25" :format="dateFormat"> </Datepicker>
+              </div>
             </div>
-            <div class="d-flex flex-row">
+            <div class="d-flex flex-row mt-4">
               <v-btn class="mx-3" color="primary" size="large" append-icon="mdi-arrow-right-drop-circle-outline"
                 rounded="lg" @click="lockEdit = !lockEdit">
-                编辑作业
+                {{ editMsgs[lockEdit] }}
               </v-btn>
-              <NuxtLink to="/task/manage" class=" text-decoration-none">
+              <NuxtLink v-if="!lockEdit" :to="lockEdit ? '' : '/task/manage'" class=" text-decoration-none">
                 <v-btn class="mx-3" color="primary" size="large" append-icon="mdi-arrow-right-drop-circle-outline"
                   rounded="lg" :disabled="lockEdit" @click="lockEdit = !lockEdit">
                   提交修改
@@ -149,6 +168,15 @@
   cursor: default;
 }
 
+.item-length {
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.date-length {
+  width: 550px;
+}
+
 .main-sheet {
   min-height: 80vh;
   width: 96%;
@@ -162,6 +190,10 @@ const checkExpire = { true: "未截止", false: "已截止" };
 const expireColor = { true: "info", false: "error" };
 const valid = ref(true);
 const lockEdit = ref(true);
+const editMsgs = {
+  false: "取消编辑",
+  true: "编辑信息"
+}
 
 // TODO:
 // task接口
@@ -193,23 +225,33 @@ for (let index = 0; index < 24; index++) {
 }
 
 
-const contents = ref(Array(task.questions.length).fill(''));
+const contents = reactive(task.questions);
 const contentRules = reactive([v => !!v || '问题内容不能为空']);
 
-const route = useRoute();
-console.log(route.query.date);
-
 const reduceQuest = () => {
-  if (task.questions.length > 1) {
-    task.questions.pop();
+  if (contents.length > 1) {
+    contents.pop();
   }
 };
 
 // date picker
-const fullDate = ref();
-let selectDate = ref(task.expireDate);
-watch(fullDate, (newValue, oldValue) => {
-  selectDate = `${newValue.getFullYear()}${(newValue.getMonth() + 1)}${newValue.getDate()}`;
+const fullSelectDate = ref();
+const fullExpireDate = ref();
+const taskTypes = ["课堂作业", "课后作业"];
+let selectDate = ref();
+let expireDate = ref();
+const select = ref();
+watch(fullSelectDate, (newValue, oldValue) => {
+  const year = newValue.getFullYear().toString();
+  const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
+  const day = newValue.getDate().toString().padStart(2, '0');
+  selectDate = year + month + day;
+});
+watch(fullExpireDate, (newValue, oldValue) => {
+  const year = newValue.getFullYear().toString();
+  const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
+  const day = newValue.getDate().toString().padStart(2, '0');
+  expireDate = year + month + day;
 });
 const dateFormat = (date) => {
   const day = date.getDate();

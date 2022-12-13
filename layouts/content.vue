@@ -36,7 +36,7 @@
           <v-list>
             <v-list-item v-for="(item, index) in userItems" :key="index" :value="index">
               <v-list-item-title class=" text-caption">
-                <NuxtLink :to="`${item.url}?id=${user.id}`" class=" text-decoration-none"
+                <NuxtLink :to="`${item.url}?id=${idList[index]}`" class=" text-decoration-none"
                   :style="{ color: `${data.textColor}` }">
                   {{ item.title }}
                 </NuxtLink>
@@ -63,7 +63,7 @@
           </h1>
         </div>
       </v-parallax>
-      <v-sheet class="mx-auto blur main-sheet" :color=data.bgColor rounded="lg" elevation="6">
+      <v-sheet class="mx-auto blur main-sheet pa-4" :color=data.bgColor rounded="lg" elevation="6">
 
         <slot />
       </v-sheet>
@@ -127,12 +127,15 @@
 <script setup>
 import { useTheme } from 'vuetify'
 import bgImg from '~/assets/image/board.jpg'
-import {store} from "~/store/store";
+import { store } from "~/store/store";
 
 const user = {
   userName: store().username,
   priority: store().priority,
+  userID: store().userID,
+  groupID: store().groupID,
 }
+const idList = ref([user.userID, user.groupID]);
 
 const theme = useTheme();
 let data = reactive({
@@ -148,7 +151,7 @@ let data = reactive({
 let taskLink = ref("/task/taskflow");
 let projectLink = ref("/project/board");
 let notTeacher = ref(true);
-if (user.userName) {
+if (user.priority !== -1) {
   data.userName = user.userName;
   data.userIcon = 'mdi-account-check-outline';
 }

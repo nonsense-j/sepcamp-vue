@@ -25,19 +25,17 @@
             <v-table>
               <tbody>
                 <tr>
-                  <td class="head-tab text-no-wrap">所在小组:</td>
+                  <td class="head-tab text-no-wrap">小组名称:</td>
                   <td class=" sub-tab">
                     <v-btn variant="text" color="primary" class="text-btn px-1">
-                      <NuxtLink v-if="user.groupStatus" :to="`/info/group?id=${user.groupID}`"
-                        class="text-info text-decoration-none">
-                        <v-icon icon="mdi-account-group" class="mr-2" />{{ user.groupName }}
+                      <NuxtLink :to="`/info/group?id=${user.groupID}`" class="text-info text-decoration-none">
+                        <v-icon icon="mdi-circle-small" />{{ p }}
                       </NuxtLink>
-                      {{ showNotGrouped[user.groupStatus] }}
                     </v-btn>
                   </td>
                 </tr>
                 <tr>
-                  <td class="head-tab text-no-wrap">兴趣方向:</td>
+                  <td class="head-tab text-no-wrap">个人兴趣方向:</td>
                   <td class=" sub-tab">
                     <v-chip-group column class="py-2">
                       <v-chip density="comfortable" color="secondary" v-for="interest in user.interests" :key="interest"
@@ -58,13 +56,13 @@
               </tbody>
             </v-table>
             <div class="d-flex flex-row mt-10 mb-4 mx-3">
-              <v-btn color="info" rounded="lg" class="text-btn">
+              <v-btn color="info" rounded="lg">
                 <v-icon icon="mdi-qqchat"></v-icon>
                 <v-tooltip activator="parent" location="top">{{ user.qqAccount }}</v-tooltip>
               </v-btn>
               <v-spacer />
               <v-btn color="info" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg">
-                <NuxtLink :to="`/info/profiled?id=${user.userID}`" class="text-white text-decoration-none">
+                <NuxtLink :to="`/info/profiled?id=${user.groupID}`" class="text-info text-decoration-none">
                   编辑信息
                 </NuxtLink>
               </v-btn>
@@ -107,15 +105,12 @@ const user = {
   priority: store().priority,
   userID: store().userID,
   groupID: store().groupID,
-  groupName: store().groupName,
   term: store().term,
   interests: store().interests,
   introduction: store().introduction,
-  qqAccount: store().qqAccount,
-  groupStatus: store().groupStatus,
+  qqAccount: store().qqAccount
 }
 
-const showNotGrouped = ['!尚未组队', '']
 const lockEdit = ref(true);
 
 
