@@ -186,6 +186,7 @@ axios.post(global_store.serverURL + "team/getTeamById", {team_id: global_store.g
       group.groupName = data.team_name
       group.term = data.term
       group.interests = data.interests.split('\u0001')
+      newInterests = data.interests.split('\u0001')
       group.introduction = data.introduction
       group.qqAccount = data.qqnumber
       group.projectId = data.project_id
@@ -241,16 +242,16 @@ const backPage = () => {
 }
 
 const submitMessage = () => {
-  alert(111)
   axios.defaults.headers['authorization'] = global_store.token;
   axios.post(global_store.serverURL + "team/ChangeTeamInformation", {
     team_id: global_store.groupID,
-    team_name:group.team_name,
-    Interests:group.Interests.join("\u0001"),
-    Introduction:group.introduction,
-    QQNumber:group.QQNumber,
+    team_name:group.groupName,
+    interests:newInterests.join("\u0001"),
+    introduction:group.introduction,
+    qQNumber:group.qqAccount,
+    project_id:group.qqAccount.toString(),
   }).then(response => {
-    alert(111)
+
         if(response.status === 200) {
           let result = response.data
           if(result.success === true) {
@@ -271,7 +272,6 @@ const submitMessage = () => {
     if(response.status === 200) {
       let result = response.data
       if(result.success === true) {
-        alert('小组信息修改成功')
       }
       else {
         alert(result.message)
