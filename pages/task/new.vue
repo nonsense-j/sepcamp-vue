@@ -41,12 +41,10 @@
                 @click="reduceQuest">
                 减少问题
               </v-btn>
-              <NuxtLink to="/task/manage" class=" text-decoration-none">
-                <v-btn class="mx-3" color="primary" size="large" append-icon="mdi-arrow-right-drop-circle-outline"
-                  rounded="lg" @click="createTask">
-                  发布作业
-                </v-btn>
-              </NuxtLink>
+              <v-btn class="mx-3" color="primary" size="large" append-icon="mdi-arrow-right-drop-circle-outline"
+                rounded="lg" @click="createTask">
+                发布作业
+              </v-btn>
             </div>
           </v-form>
         </div>
@@ -88,8 +86,8 @@ const reduceQuest = () => {
 const fullDate = ref();
 let selectDate = ref();
 let selectDate2 = ref();
-const select = ref();
 const taskTypes = ["课堂作业", "课后作业"];
+const select = ref(taskTypes[0]);
 watch(fullDate, (newValue, oldValue) => {
   const year = newValue.getFullYear().toString();
   const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
@@ -106,15 +104,23 @@ const dateFormat = (date) => {
 }
 
 const createTask = () => {
+  if(typeof selectDate2 === 'undefined') {
+    alert('请先选择结束日期')
+    return
+  }
   const global_store = store()
-  let task = new FormData()
   let timestamp=new Date().getTime()
   let DescribeText = contents.join("^")
-  let enddate = new Date(selectDate2)
-  task.append('DescribeText',DescribeText)
-  task.append('StartTime', timestamp)
-  task.append('EndTime',  enddate)
-  task.append('Term', '20222')
+  let endDate = new Date(selectDate2).getTime()
+  let homeworkType = select.value === '课堂作业' ? 2 : 1
+  console.log(timestamp)
+  let task = {
+    describe_Text: DescribeText,
+    start_Time: timestamp,
+    end_Time: endDate,
+    term: '20222',
+    homework_Type: homeworkType
+  }
 
   axios.defaults.headers['authorization'] = global_store.token;
   axios.post(global_store.serverURL + "homework/create", task)
@@ -125,6 +131,7 @@ const createTask = () => {
           if(result.success === true) {
             // login success
             alert('作业添加成功')
+            this.$router.push('/task/manage')
           }
           else {
             alert(result.message)

@@ -19,7 +19,7 @@
               <template v-slot:opposite>
                 <div class="pt-1 text-primary">
                   <v-icon>mdi-calendar</v-icon>
-                  {{ task.date }}
+                  {{ task.date.toLocaleString() }}
                 </div>
               </template>
               <v-card elevation="6" width="60vw">
@@ -41,9 +41,9 @@
                     </v-btn>
                   </NuxtLink>
                   <v-spacer></v-spacer>
-                  <v-btn :color="expireColor[task.expireDate >= curDate]" variant="outlined" density="comfortable"
+                  <v-btn :color="expireColor[task.expireDate >= now]" variant="outlined" density="comfortable"
                     class="text-btn mr-4">
-                    {{ checkExpire[task.expireDate >= curDate] }} </v-btn>
+                    {{ checkExpire[task.expireDate >= now] }} </v-btn>
                 </v-card-actions>
               </v-card>
             </v-timeline-item>
@@ -87,7 +87,7 @@ const expireColor = { true: "info", false: "error" };
 let tasks = reactive([])
 
 axios.defaults.headers['authorization'] = store().token
-axios.post(store().serverURL + "homework/getOneList", 1)
+axios.post(store().serverURL + "homework/getAllList", {term:"20222"})
     .then(response => {
       /*
       console.log(tasks)
@@ -100,7 +100,15 @@ axios.post(store().serverURL + "homework/getOneList", 1)
       }
       console.log(tasks)
       */
-      console.log(response)
+      let data = response.data
+      for(let i = 0; i < data.length; i ++)
+      tasks.push({
+        date: new Date(data[i].start_Time),
+        type: data[i].homework_Type,
+        questions: data[i].describe_Text.split('\a'),
+        expireDate: new Date(data[i].end_Time),
+        submitStatus: 0
+      })
     })
     .catch(error => {
       console.log(error)
@@ -137,10 +145,6 @@ const tasks = ref([
 ]);
 */
 
-let now = new Date();
-const year = now.getFullYear().toString();
-const month = (now.getMonth() + 1).toString().padStart(2, '0');
-const day = now.getDate().toString().padStart(2, '0');
-let curDate = year + month + day;
+let now = new Date()
 
 </script>
