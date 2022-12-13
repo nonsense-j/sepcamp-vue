@@ -151,6 +151,7 @@ import axios from "axios";
 
 definePageMeta({
   layout: "introduct",
+  middleware: ["auth", "ungrouped"]
 });
 
 const user = {

@@ -65,7 +65,7 @@
 </style>
 <script>
 import axios from "axios";
-import {store} from "~/store/store";
+import { store } from "~/store/store";
 
 definePageMeta({
   layout: "entrance",
@@ -107,9 +107,9 @@ export default {
       '教师'
     ],
     rsa_pub_key: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfUL4XUO6v0vaWQ8GfSWvwSgTO\n' +
-        '6wXUBdHyTXXKGirCZ/r/isdfQqwkK1urDE2M2s+YAJYhLCrjf6nACejc8Rhx0UJ9\n' +
-        '9e9MKehfFkUA1MzvlG+Azu4tBzxjO04u6iLe+p+kOXMouH3nTmgWY7/4s2d85uxz\n' +
-        'PxO26t2eZb9qJRmatQIDAQAB'
+      '6wXUBdHyTXXKGirCZ/r/isdfQqwkK1urDE2M2s+YAJYhLCrjf6nACejc8Rhx0UJ9\n' +
+      '9e9MKehfFkUA1MzvlG+Azu4tBzxjO04u6iLe+p+kOXMouH3nTmgWY7/4s2d85uxz\n' +
+      'PxO26t2eZb9qJRmatQIDAQAB'
   }),
   methods: {
     register() {

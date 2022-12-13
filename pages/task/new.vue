@@ -89,6 +89,10 @@ import Datepicker from '@vuepic/vue-datepicker';
 import {store} from "~/store/store";
 import axios from "axios";
 
+definePageMeta({
+  middleware: ["onlyadmin"]
+});
+
 const valid = ref(true);
 const contents = reactive(['',]);
 const contentRules = reactive([v => !!v || '问题内容不能为空']);

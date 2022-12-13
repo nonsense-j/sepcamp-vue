@@ -25,7 +25,8 @@
                   <v-list class="py-0">
                     <v-list-item v-for="question in task.questions" :key="question" class="py-0">
                       <v-icon icon="mdi-help-circle-outline" />
-                      {{ question }}</v-list-item>
+                      {{ question }}
+                    </v-list-item>
                   </v-list>
                 </v-card-text>
                 <v-card-actions class="py-0 pr-2">
@@ -76,7 +77,7 @@ import axios from "axios";
 import {store} from "~/store/store";
 
 definePageMeta({
-  layout: "default",
+  middleware: ["auth"]
 });
 
 const typeColors = { '1': "cyan", '2': "amber" };

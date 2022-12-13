@@ -153,19 +153,15 @@ import axios from "axios";
 
 definePageMeta({
   layout: "introduct",
+  middleware: ["auth", "samegid"]
 });
 
-const user = {
-  userName: store().username,
-  priority: store().priority,
-  userID: store().userID,
-  groupID: store().groupID,
-}
+const route = useRoute();
 
 // TODO: 
 // 根据Token访问数据库获取(ID可以通过Token获取或者store)
 const group = reactive({
-  groupID: user.groupID, //-1表示没有组队
+  groupID: route.query.id, //-1表示没有组队
   groupName: "Bug生产队",
   ProjName: "面向群聊的聊天机器人",
   term: "2022秋",

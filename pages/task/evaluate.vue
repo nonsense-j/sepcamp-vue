@@ -92,6 +92,10 @@ const homework_id = route.query.id
 const user_id = route.query.user
 const username = route.query.username
 
+definePageMeta({
+  middleware: ["onlyadmin"]
+});
+
 // 作业接口
 const task = reactive({
   date: '20221107',

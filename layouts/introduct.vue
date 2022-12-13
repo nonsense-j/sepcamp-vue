@@ -146,6 +146,7 @@ let taskLink = ref("/task/taskflow");
 let projectLink = ref("/project/board");
 let notTeacher = ref(true);
 let userItems = ref([{ title: '个人信息', url: '/info/profile' }]);
+
 // 学生登录导航栏
 if (user.priority === 0) {
   data.userName = user.userName;
@@ -154,17 +155,17 @@ if (user.priority === 0) {
     { title: '个人信息', url: '/info/profile' },
     { title: '我的小组', url: '/info/group' }
   ];
+  if (user.groupID === -1) {
+    userItems[1].url = '/info/nogroup';
+  }
 }
-if (user.groupID === -1 && user.priority === 0) {
-  console.log(userItems[1]);
-  userItems[1].url = '/info/nogroup';
-}
+
 // 老师--修改作业管理跳转，项目管理跳转以及修改用户登陆图标
 if (user.priority === 1 || user.priority === 2) {
+  data.userName = user.userName;
   taskLink = "/task/manage";
   projectLink = "/project/manage"
   data.userIcon = 'mdi-account-key-outline';
-  userItems = [{ title: '个人信息', url: '/info/profile' }];
   notTeacher = false;
 }
 

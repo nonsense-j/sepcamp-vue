@@ -82,6 +82,7 @@ import {store} from "~/store/store";
 import axios from "axios";
 
 
+
 const global_store = store()
 const route = useRoute();
 const homework_id = route.query.id
@@ -110,6 +111,11 @@ axios.post(global_store.serverURL + "homework/getOne", {homework_Id: homework_id
         for(let i = 0; i < answers.length; i ++) contents.value[i] = answers[i]
       }
     })
+
+definePageMeta({
+  middleware: ["auth"]
+});
+
 
 // 富文本编辑器
 let contents = ref(Array(task.questions.length).fill(""));

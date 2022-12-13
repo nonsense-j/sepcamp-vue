@@ -3,7 +3,7 @@
     <div class="mx-auto">
       <v-btn elevation="4" class="text-btn" color="info" size="x-large" prepend-icon="mdi-account-school"
         append-icon="mdi-account-school">
-        {{ user.userName }}
+        {{ userInfo.userName }}
       </v-btn>
     </div>
     <div class="mx-auto mt-2 mb-3 text-info">
@@ -14,7 +14,7 @@
         </div>
         <div class="ml-1">
           <v-icon icon="mdi-link-box-variant" class=" mr-1" />
-          <span class=" text-subtitle-2">id:#{{ user.userID }}</span>
+          <span class=" text-subtitle-2">id:#{{ userInfo.userID }}</span>
         </div>
       </div>
     </div>
@@ -25,14 +25,20 @@
             <v-table>
               <tbody>
                 <tr>
+                  <td class=" head-tab text-no-wrap">身份:</td>
+                  <td class=" sub-tab">
+                    {{ userIdentity[userInfo.priority] }}
+                  </td>
+                </tr>
+                <tr v-if="userInfo.priority === 0">
                   <td class="head-tab text-no-wrap">所在小组:</td>
                   <td class=" sub-tab">
                     <v-btn variant="text" color="warning" class="text-btn px-1">
-                      <NuxtLink v-if="user.groupID !== -1" :to="`/info/group?id=${user.groupID}`"
+                      <NuxtLink v-if="userInfo.groupID !== 0" :to="`/info/group?id=${userInfo.groupID}`"
                         class="text-info text-decoration-none">
                         <v-icon icon="mdi-account-group" class="mr-2" />{{ userInfo.groupName }}
                       </NuxtLink>
-                      {{ showNotGrouped[user.groupID !== -1] }}
+                      {{ showNotGrouped[userInfo.groupID !== -1] }}
                     </v-btn>
                   </td>
                 </tr>
@@ -63,8 +69,9 @@
                 <v-tooltip activator="parent" location="top">{{ userInfo.qqAccount }}</v-tooltip>
               </v-btn>
               <v-spacer />
-              <v-btn color="info" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg">
-                <NuxtLink :to="`/info/profiled?id=${user.userID}`" class="text-white text-decoration-none">
+              <v-btn color="info" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg"
+                v-if="userInfo.userID == user.userID">
+                <NuxtLink :to="`/info/profiled?id=${userInfo.userID}`" class="text-white text-decoration-none">
                   编辑信息
                 </NuxtLink>
               </v-btn>
@@ -101,21 +108,23 @@ import axios from "axios";
 
 definePageMeta({
   layout: "introduct",
+  middleware: ["auth"]
 });
 
+const route = useRoute();
 const user = {
-  userName: store().username,
-  priority: store().priority,
-  userID: store().userID,
-  groupID: store().groupID,
+  userID: store().userID
 }
 
 // TODO: 
-// 根据Token访问数据库获取(ID可以通过Token获取或者store)
+// 根据Token访问数据库获取(userID通过userID)
 const userInfo = reactive({
-  userID: user.userID,
+  userID: route.query.id,
+  userName: "Aurora",
+  priority: 0,
   term: "2022秋",
   groupName: "Bug生产小组",
+  groupID: 1001,
   interests: ["web开发", "前端", "图像处理", "人机交互"],
   introduction: "作为一名经管与计算机应用专业的学生，我认识到互联网将在未来经济中发挥巨大的作用，所以，业余时间我刻苦自学了很多网络知识。而且，我还不满足于此，进一步学习了Html语言，和Frontpage，Dreamweaver，等网页编辑软件，Firework，flash等网页图形处理软件，可以自如的进行网页编辑。",
   qqAccount: 573924561,
@@ -134,5 +143,6 @@ axios.post(global_store.serverURL + "userinfo/getUserInformation", {user_id: glo
     })
 
 const showNotGrouped = { false: '尚未组队', true: '' };
+const userIdentity = ["学生", "助教", "教师"];
 
 </script>
