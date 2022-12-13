@@ -14,7 +14,7 @@
         </div>
         <div class="ml-1">
           <v-icon icon="mdi-link-box-variant" class=" mr-1" />
-          <span class=" text-subtitle-2">id:{{ group.groupID }}</span>
+          <span class=" text-subtitle-2">id:#{{ group.groupID }}</span>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
                   <td class="sub-tab">{{ group.ProjName }}</td>
                 </tr>
                 <tr>
-                  <td class="head-tab text-no-wrap">小队成员:</td>
+                  <td class="head-tab text-no-wrap">小组成员:</td>
                   <td class=" sub-tab">
                     <v-btn v-for="(p, i) in group.members" :key="i" variant="text" color="info" class="text-btn px-1">
                       <NuxtLink :to="`/info/profile?id=${group.memberIDs[i]}`" class="text-info text-decoration-none">
@@ -39,18 +39,18 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="head-tab text-no-wrap">小队兴趣方向:</td>
+                  <td class="head-tab text-no-wrap">小组兴趣方向:</td>
                   <td class=" sub-tab">
-                    <v-chip-group column class="py-2">
-                      <v-chip density="comfortable" color="secondary" v-for="interest in group.interests"
-                        :key="interest" variant="outlined">
+                    <v-chip-group column class="py-2 text-success">
+                      <v-chip density="comfortable" v-for="interest in group.interests" :key="interest"
+                        variant="outlined">
                         {{ interest }}
                       </v-chip>
                     </v-chip-group>
                   </td>
                 </tr>
                 <tr>
-                  <td class="head-tab text-no-wrap pt-2">小队介绍:</td>
+                  <td class="head-tab text-no-wrap pt-2">小组介绍:</td>
                   <td>
                     <v-responsive aspect-ratio="4 / 3" class="border mt-3 pa-2">
                       {{ group.introduction }}
@@ -65,9 +65,15 @@
                 <v-tooltip activator="parent" location="top">{{ group.qqAccount }}</v-tooltip>
               </v-btn>
               <v-spacer />
+              <!-- TODO: -->
+              <!-- 点击退出小组进入创建小组页面 -->
+              <v-btn color="warning" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg" @click="exitGroup()"
+                class="mr-3">
+                退出小组
+              </v-btn>
               <v-btn color="primary" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg">
                 <NuxtLink :to="`/info/grouped?id=${group.groupID}`" class="text-white text-decoration-none">
-                  编辑小队
+                  编辑小组
                 </NuxtLink>
               </v-btn>
             </div>
@@ -101,7 +107,7 @@
 import { store } from "~/store/store"
 
 definePageMeta({
-  layout: "introduct",
+  layout: "introduct"
 });
 
 const user = {
@@ -111,10 +117,11 @@ const user = {
   groupID: store().groupID,
 }
 
-// TODO: team
+// TODO: 
+// 根据Token访问数据库获取(ID可以通过Token获取或者store)
 const group = reactive({
-  groupID: user.groupID,
-  groupName: "你说得都队",
+  groupID: user.groupID, //-1表示没有组队
+  groupName: "Bug生产队",
   ProjName: "面向群聊的聊天机器人",
   term: "2022秋",
   members: ["Aurora", "Charlie"],
@@ -123,5 +130,14 @@ const group = reactive({
   introduction: "小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.",
   qqAccount: 123123453,
 });
+
+const router = useRouter();
+const exitGroup = () => {
+  if (confirm("是否确认退出当前小组？")) {
+    // TODO
+    // 访问后端 store().groupID=-1
+    router.push("/info/nogroup");
+  }
+}
 
 </script>

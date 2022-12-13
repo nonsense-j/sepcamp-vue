@@ -3,14 +3,14 @@
     <div class="mx-auto">
       <v-btn elevation="4" class="text-btn" color="primary" size="x-large" prepend-icon="mdi-account-group"
         append-icon="mdi-account-group">
-        小组信息编辑
+        创建新小组
       </v-btn>
     </div>
     <div class="mx-auto mt-2 mb-3 text-primary">
       <div class="text-caption d-flex flex-row align-center">
         <div class="ml-1">
           <v-icon icon="mdi-link-box-variant" class=" mr-1" />
-          <span class=" text-subtitle-2">id:#{{ group.groupID }}</span>
+          <span class=" text-subtitle-2">id:#none</span>
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@
                   <div class="head-tab text-no-wrap mt-2 mr-4">学期:</div>
                   <div class="sub-tab flex-fill">
                     <v-select variant="outlined" v-model="group.term" :items="terms"
-                      :rules="[v => !!v || '需要选择你所修读的学期']" placeholder="学期" density="compact" required class="w-50">
+                      :rules="[v => !!v || '需要选择你所修读的学期']" placeholder="学期" density="compact" required class="w-75">
                     </v-select>
                   </div>
                 </div>
@@ -70,7 +70,7 @@
                         <v-btn icon="mdi-plus" density="compact" color="primary" class="mt-1 ml-2"
                           @click="addMemberID()"></v-btn>
                         <v-btn icon="mdi-minus" density="compact" color="primary" class="mt-1 ml-1"
-                          @click="newMemberIDs.pop()"></v-btn>
+                          @click="popMemberID()"></v-btn>
                       </div>
                     </v-responsive>
                   </div>
@@ -107,14 +107,14 @@
               </v-container>
               <div class="d-flex flex-row mb-4 mb-3">
                 <v-btn color="primary" append-icon="mdi-close-circle-outline" rounded="lg" @click="backPage">
-                  取消编辑
+                  取消创建
                 </v-btn>
                 <v-spacer />
                 <!-- TODO: -->
                 <!-- 点击提交信息回到小组信息页并且刷新 -->
                 <NuxtLink :to="`/info/group?id=${$route.query.id}`" class=" text-decoration-none">
                   <v-btn color="primary" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg">
-                    提交信息
+                    创建小组
                   </v-btn>
                 </NuxtLink>
               </div>
@@ -161,24 +161,23 @@ const user = {
   groupID: store().groupID,
 }
 
-// TODO: 
-// 根据Token访问数据库获取(ID可以通过Token获取或者store)
+// TODO:
+// 最后所有填写的数据都存放在这个group里面
 const group = reactive({
-  groupID: user.groupID, //-1表示没有组队
-  groupName: "Bug生产队",
-  ProjName: "面向群聊的聊天机器人",
-  term: "2022秋",
-  members: ["Aurora", "Charlie"],
-  memberIDs: [1001, 1002],
-  interests: ["机器学习", "自然语言处理"],
-  introduction: "小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.",
-  qqAccount: 123123453,
+  groupName: "",
+  ProjName: "",
+  term: "",
+  members: [user.userName],
+  memberIDs: [user.userID],
+  interests: [],
+  introduction: "",
+  qqAccount: "",
 });
 
 const valid = ref(true);
 const router = useRouter();
 const notNullRules = reactive([v => !!v || '内容不能为空']);
-const terms = reactive(store().terms);
+const terms = reactive(["2021秋", "2022秋", "2023秋"]);
 
 let newInterests = reactive(group.interests);
 const newInterest = ref("");
@@ -206,8 +205,14 @@ const addMemberID = () => {
     nullMemberID.value = true;
 }
 
+const popMemberID = () => {
+  // console.log(newMemberIDs.length);
+  if (newMemberIDs.length > 1)
+    newMemberIDs.pop();
+}
+
 const backPage = () => {
-  router.go(-1);
+  router.push('/');
 }
 
 
