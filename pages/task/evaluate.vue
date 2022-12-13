@@ -125,7 +125,7 @@ axios.post(global_store.serverURL + "homework/getOneWithUser", {
       task.submitStatus = data.is_Submitted
       if(data.is_Submitted) {
         let answers = data.text_Answer.split('\u0001')
-        for(let i = 0; i < answers.length; i ++) contents.value[i] = answers[i]
+        for(let i = 0; i < answers.length; i ++) contents[i] = answers[i]
       }
     })
 
@@ -169,7 +169,7 @@ const submitScore = () => {
     axios.post(global_store.serverURL + "homework/updateScore", {
       homework_Id: homework_id,
       user_Id: user_id,
-      score: score
+      score: score.value
     })
         .then(response => {
           let data = response.data

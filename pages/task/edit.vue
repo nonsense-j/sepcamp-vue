@@ -231,7 +231,7 @@ axios.post(global_store.serverURL + "homework/getOneList", {homework_Id: homewor
                 EvaluatedRecords.push({
                   userName: data_user[i].username,
                   userId: users[i],
-                  score: data_user[i].score === null ? '--' : data_user[i].score,
+                  score: data[i].score === 0 ? '--' : data[i].score,
                   homework_id: data[i].homework_Id
                 })
               }
