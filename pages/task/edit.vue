@@ -3,14 +3,14 @@
     <div class="mx-auto">
       <v-btn elevation="2" variant="outlined" size="x-large" prepend-icon="mdi-calendar">
         <v-icon icon="mdi-circle-small" />
-        {{ $route.query.date }}
+        {{ task.date.toLocaleString().split(' ')[0] }}
         <v-icon icon="mdi-circle-small" />
-        {{ typeNames[$route.query.type] }}
+        {{ typeNames[task.type] }}
       </v-btn>
     </div>
     <div class="mx-auto mt-2  mb-6">
-      <v-btn :color="expireColor[task.expireDate >= curDate]" variant="text" density="comfortable" class="text-btn">
-        {{ checkExpire[task.expireDate >= curDate] }} </v-btn>
+      <v-btn :color="expireColor[new Date(task.expireDate) >= new Date()]" variant="text" density="comfortable" class="text-btn">
+        {{ checkExpire[new Date(task.expireDate) >= new Date()] }} </v-btn>
     </div>
     <div class="my-auto">
       <div class="d-flex flex-row align-start px-10 justify-center">
@@ -105,7 +105,7 @@
               </v-card-item>
               <v-card-actions class="py-0">
                 <!-- TODO: -->
-                <NuxtLink :to="`/task/evaluate?date=${task.date}&type=${task.type}&user=${record.userID}`"
+                <NuxtLink :to="`/task/evaluate?id=${record.homework_id}&user=${record.userId}&username=${record.userName}`"
                   class=" text-decoration-none">
                   <v-btn color="primary" variant="text" density="comfortable" prepend-icon="mdi-chevron-double-right">
                     查看详情
@@ -144,7 +144,7 @@
               </v-card-item>
               <v-card-actions class="py-0">
                 <!-- TODO: -->
-                <NuxtLink :to="`/task/evaluate?date=${task.date}&type=${task.type}&user=${record.userID}`"
+                <NuxtLink :to="`/task/evaluate?id=${record.homework_id}&user=${record.userId}&username=${record.userName}`"
                   class=" text-decoration-none">
                   <v-btn color="success" variant="text" density="comfortable" prepend-icon="mdi-chevron-double-right">
                     查看详情
@@ -184,6 +184,8 @@
 </style>
 <script setup>
 import Datepicker from '@vuepic/vue-datepicker';
+import axios from "axios";
+import {store} from "~/store/store";
 
 const typeNames = { 0: "添加作业", 1: "课堂作业", 2: "课后作业" };
 const checkExpire = { true: "未截止", false: "已截止" };
@@ -195,35 +197,60 @@ const editMsgs = {
   true: "编辑信息"
 }
 
-// TODO:
-// task接口
-const task = {
-  date: '20221107',
-  type: 1,
-  questions: ["第6个Bottles版本为什么要分为两个类？", "Hotwire创新中，Stimulu解决什么问题？"],
-  expireDate: '20221214',
-  submitStatus: 1,
-};
-// 作业集接口
-let unEvaluatedRecords = [];
-let EvaluatedRecords = [];
-for (let index = 0; index < 24; index++) {
-  let user1 = {
-    userName: `学生-${index}`,
-    priority: 0,
-    userID: 1000 + index,
-    score: 0,
-  };
-  let user2 = {
-    userName: `学生-${index + 24}`,
-    priority: 0,
-    id: 1000 + index,
-    score: 100 - index,
-  };
-  EvaluatedRecords.push(user2);
-  unEvaluatedRecords.push(user1);
-}
+const global_store = store()
+const route = useRoute()
+const homework_id = route.query.id
 
+const task = reactive({
+  date: new Date(),
+  type: 0,
+  questions: [""],
+  expireDate: new Date(),
+  submitStatus: 0
+})
+
+axios.defaults.headers['authorization'] = global_store.token;
+axios.post(global_store.serverURL + "homework/getOneList", {homework_Id: homework_id})
+    .then(response => {
+      let data = response.data
+      console.log(data)
+      task.date = data[0].start_Time
+      task.type = data[0].homework_Type
+      task.questions = data[0].describe_Text.split('\u0001')
+      task.expireDate = data[0].end_Time
+      task.submitStatus = 0
+      let users = []
+      for(let i = 0; i < data.length; i ++) {
+        users.push(data[i].user_Id)
+      }
+      axios.post(global_store.serverURL + "userinfo/getById", {ids: users})
+          .then(response_user => {
+            let data_user = response_user.data
+            for(let i = 0; i < data.length; i ++) {
+              if(data[i].is_Submitted) {
+                EvaluatedRecords.push({
+                  userName: data_user[i].username,
+                  userId: users[i],
+                  score: data_user[i].score === null ? '--' : data_user[i].score,
+                  homework_id: data[i].homework_Id
+                })
+              }
+              else {
+                unEvaluatedRecords.push({
+                  userName: data_user[i].username,
+                  userId: users[i],
+                  score: '--',
+                  homework_id: data[i].homework_Id
+                })
+              }
+            }
+            console.log(EvaluatedRecords[0])
+          })
+    })
+
+// 作业集接口
+const unEvaluatedRecords = reactive([])
+const EvaluatedRecords = reactive([])
 
 const contents = reactive(task.questions);
 const contentRules = reactive([v => !!v || '问题内容不能为空']);

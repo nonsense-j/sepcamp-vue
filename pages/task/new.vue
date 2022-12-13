@@ -126,6 +126,7 @@ const dateFormat = (date) => {
 
   return year + month + day;
 }
+const router = useRouter()
 
 const createTask = () => {
   let startDate = fullSelectDate.value
@@ -138,7 +139,7 @@ const createTask = () => {
     alert('请先选择结束日期')
   }
   const global_store = store()
-  let DescribeText = contents.join("^")
+  let DescribeText = contents.join("\u0001")
   let homeworkType = select.value === '课堂作业' ? 2 : 1
   let task = {
     describe_Text: DescribeText,
@@ -157,7 +158,7 @@ const createTask = () => {
           if(result.success === true) {
             // login success
             alert('作业添加成功')
-            this.$router.push('/task/manage')
+            router.go(-1)
           }
           else {
             alert(result.message)

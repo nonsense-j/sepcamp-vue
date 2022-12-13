@@ -6,16 +6,16 @@
           <v-btn elevation="2" width="30%" variant="outlined" size="x-large" class="mx-auto mt-2 text-btn"
             prepend-icon="mdi-calendar">
             <v-icon icon="mdi-circle-small" />
-            {{ $route.query.date }}
+            {{ task.date.split(' ')[0] }}
             <v-icon icon="mdi-circle-small" />
-            {{ typeNames[$route.query.type] }}
+            {{ typeNames[task.type] }}
             <v-icon icon="mdi-circle-small" />
             {{ user.userName }}
           </v-btn>
           <div class="mx-auto mt-2">
-            <v-btn :color="expireColor[task.expireDate >= curDate]" variant="text" density="comfortable"
+            <v-btn :color="expireColor[new Date(task.expireDate) >= now]" variant="text" density="comfortable"
               class="text-btn">
-              {{ checkExpire[task.expireDate >= curDate] }} </v-btn>
+              {{ checkExpire[new Date(task.expireDate) >= now] }} </v-btn>
           </div>
           <v-container>
             <v-list class="py-0">
@@ -83,23 +83,52 @@
 <script setup>
 // 引入组件
 import Vue3Tinymce from '@jsdawn/vue3-tinymce';
+import {store} from "~/store/store";
+import axios from "axios";
+
+const global_store = store()
+const route = useRoute();
+const homework_id = route.query.id
+const user_id = route.query.user
+const username = route.query.username
 
 // 作业接口
-const task = {
+const task = reactive({
   date: '20221107',
   type: 1,
   questions: ["第6个Bottles版本为什么要分为两个类？", "Hotwire创新中，Stimulu解决什么问题？"],
   answers: ["分为两类更便于维护", "Stimulus 是一个抱负不大的 JavaScript 框架。它并不试图接管你的整个前端——事实上，它根本不关心渲染 HTML。相反，它旨在通过足够的行为来增强您的 HTML，使其大放异彩。 Stimulus 与 Turbo 完美搭配，以最少的工作量为快速、引人注目的应用程序提供完整的解决方案"],
   expireDate: '20221114',
   submitStatus: 1,
+});
+const user = {
+  username: username
 };
-const user = useUser();
 
 // 富文本编辑器
 let contents = ref(Array(task.questions.length).fill(""));
 if (task.submitStatus) {
   contents = task.answers;
 }
+
+axios.defaults.headers['authorization'] = global_store.token
+axios.post(global_store.serverURL + "homework/getOneWithUser", {
+  homework_Id: homework_id,
+  user_Id: user_id
+})
+    .then(response => {
+      let data = response.data
+      task.date = data.start_Time
+      task.type = data.homework_Type
+      task.questions = data.describe_Text.split('\u0001')
+      task.expireDate = data.end_Time
+      task.submitStatus = data.is_Submitted
+      if(data.is_Submitted) {
+        let answers = data.text_Answer.split('\u0001')
+        for(let i = 0; i < answers.length; i ++) contents.value[i] = answers[i]
+      }
+    })
+
 
 const setting = {
   menubar: false,
@@ -136,7 +165,22 @@ const submitScore = () => {
   if (score) {
     // TODO: 
     // 添加score=${Math.trunc(score)}作为参数给后端更新本user的作业分数
-    router.push(`/task/edit?date=${task.date}&type=${task.type}`);
+    axios.defaults.headers['authorization'] = global_store.token
+    axios.post(global_store.serverURL + "homework/updateScore", {
+      homework_Id: homework_id,
+      user_Id: user_id,
+      score: score
+    })
+        .then(response => {
+          let data = response.data
+          if(data.success) {
+            alert(data.message)
+            router.go(-1);
+          }
+          else {
+            alert(data.message)
+          }
+        })
   }
   else
     alert("请拖动线条进行打分~");

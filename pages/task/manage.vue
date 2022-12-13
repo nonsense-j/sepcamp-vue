@@ -19,7 +19,7 @@
               <template v-slot:opposite>
                 <div class="pt-1 text-primary">
                   <v-icon>mdi-calendar</v-icon>
-                  {{ task.date.toLocaleString() }}
+                  {{ task.date.toLocaleString().split(" ")[0] }}
                 </div>
               </template>
               <v-card elevation="6" width="60vw">
@@ -34,7 +34,7 @@
                   </v-list>
                 </v-card-text>
                 <v-card-actions class="py-0 pr-2">
-                  <NuxtLink :to="`/task/edit?date=${task.date}&type=${task.type}`" class=" text-decoration-none">
+                  <NuxtLink :to="`/task/edit?id=${task.id}`" class=" text-decoration-none">
                     <v-btn :color="typeColors[task.type]" variant="text" density="comfortable"
                       prepend-icon="mdi-chevron-double-right">
                       提交情况
@@ -101,14 +101,16 @@ axios.post(store().serverURL + "homework/getAllList", {term:"20222"})
       console.log(tasks)
       */
       let data = response.data
-      for(let i = 0; i < data.length; i ++)
-      tasks.push({
-        date: new Date(data[i].start_Time),
-        type: data[i].homework_Type,
-        questions: [data[i].describe_Text],
-        expireDate: new Date(data[i].end_Time),
-        submitStatus: 0
-      })
+      for(let i = 0; i < data.length; i ++) {
+        tasks.push({
+          date: new Date(data[i].start_Time),
+          type: data[i].homework_Type,
+          questions: data[i].describe_Text.split('\u0001'),
+          expireDate: new Date(data[i].end_Time),
+          submitStatus: 0,
+          id: data[i].homework_Id
+        })
+      }
     })
     .catch(error => {
       console.log(error)
