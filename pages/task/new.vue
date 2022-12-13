@@ -93,6 +93,10 @@ definePageMeta({
   middleware: ["onlyadmin"]
 });
 
+definePageMeta({
+  middleware: ["onlyadmin"]
+});
+
 const valid = ref(true);
 const contents = reactive(['',]);
 const contentRules = reactive([v => !!v || '问题内容不能为空']);

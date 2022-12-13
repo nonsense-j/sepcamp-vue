@@ -184,6 +184,9 @@
 </style>
 <script setup>
 import Datepicker from '@vuepic/vue-datepicker';
+definePageMeta({
+  middleware: ["onlyadmin"]
+});
 
 import axios from "axios";
 import {store} from "~/store/store";

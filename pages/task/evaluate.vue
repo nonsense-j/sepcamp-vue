@@ -96,6 +96,10 @@ definePageMeta({
   middleware: ["onlyadmin"]
 });
 
+definePageMeta({
+  middleware: ["onlyadmin"]
+});
+
 // 作业接口
 const task = reactive({
   date: '20221107',

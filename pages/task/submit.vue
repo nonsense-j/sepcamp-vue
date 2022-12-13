@@ -116,7 +116,6 @@ definePageMeta({
   middleware: ["auth"]
 });
 
-
 // 富文本编辑器
 let contents = ref(Array(task.questions.length).fill(""));
 if (task.submitStatus) {
