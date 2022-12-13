@@ -108,20 +108,23 @@ let data = reactive({
   textColor: theme.global.current.value.dark ? 'white' : 'black',
 });
 
-// 默认使用学生登录导航栏
+// 默认导航栏
 let taskLink = ref("/task/taskflow");
 let projectLink = ref("/project/board");
 let notTeacher = ref(true);
-if (user.priority !== -1) {
+let userItems = ref([{ title: '个人信息', url: '/info/profile' }]);
+// 学生登录导航栏
+if (user.priority === 0) {
   data.userName = user.userName;
   data.userIcon = 'mdi-account-check-outline';
+  userItems = [
+    { title: '个人信息', url: '/info/profile' },
+    { title: '我的小组', url: '/info/group' }
+  ];
 }
-let userItems = ref([
-  { title: '个人信息', url: '/info/profile' },
-  { title: '我的小队', url: '/info/group' }
-]);
-
-
+if (user.groupID === -1 && user.priority === 0) {
+  userItems[1].url = '/info/nogroup';
+}
 // 老师--修改作业管理跳转，项目管理跳转以及修改用户登陆图标
 if (user.priority === 1 || user.priority === 2) {
   taskLink = "/task/manage";
