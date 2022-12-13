@@ -40,13 +40,7 @@
 import axios from "axios";
 import {store} from "~/store/store";
 
-const Projects = reactive([{
-  team_name: 'test',
-  team_leader: 'admin',
-  introduction: 'this is an introduction',
-  team_members: 3,
-  team_id: 0
-}])
+const Projects = reactive([])
 
 const global_store = store()
 
@@ -54,7 +48,9 @@ axios.defaults.headers['authorization'] = global_store.token
 axios.get(global_store.serverURL + 'team/GetAllTeamInfo')
     .then(response => {
       let datas = response.data
+      console.log(datas)
       for(let i = 0; i < datas.length; i ++) {
+        console.log(datas[i])
         Projects.push({
           team_name: datas[i].team_name,
           team_leader: datas[i].team_leader,

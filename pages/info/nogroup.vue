@@ -112,11 +112,9 @@
                 <v-spacer />
                 <!-- TODO: -->
                 <!-- 点击提交信息回到小组信息页并且刷新 -->
-                <NuxtLink :to="`/info/group?id=${$route.query.id}`" class=" text-decoration-none">
-                  <v-btn color="primary" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg">
-                    创建小组
-                  </v-btn>
-                </NuxtLink>
+                <v-btn color="primary" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg" @click="createTeam">
+                  创建小组
+                </v-btn>
               </div>
             </v-sheet>
           </v-form>
@@ -149,6 +147,7 @@
 </style>
 <script setup>
 import { store } from "~/store/store"
+import axios from "axios";
 
 definePageMeta({
   layout: "introduct",
@@ -215,5 +214,29 @@ const backPage = () => {
   router.push('/');
 }
 
+
+const createTeam = () => {
+  let global_store = store()
+  let router = useRouter()
+  axios.defaults.headers['authorization'] = global_store.token
+  axios.post(global_store.serverURL + "project/create", {
+    group_name: group.groupName,
+    project_name: group.ProjName,
+    term: group.term,
+    member_ids: group.memberIDs,
+    introduction: group.introduction
+  })
+      .then(response => {
+        let data = response.data
+        if(data.success) {
+          alert(data.message)
+          let route = useRoute();
+          router.push("/info/group?id=" + route.query.id);
+        }
+        else {
+          alert(data.message)
+        }
+      })
+}
 
 </script>
