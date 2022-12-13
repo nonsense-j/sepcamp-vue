@@ -113,7 +113,7 @@
                 <!-- TODO: -->
                 <!-- 点击提交信息回到小组信息页并且刷新 -->
                 <NuxtLink :to="`/info/group?id=${$route.query.id}`" class=" text-decoration-none">
-                  <v-btn color="primary" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg">
+                  <v-btn color="primary" @click="submitMessage" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg">
                     提交信息
                   </v-btn>
                 </NuxtLink>
@@ -149,6 +149,7 @@
 </style>
 <script setup>
 import { store } from "~/store/store"
+import axios from "axios";
 
 definePageMeta({
   layout: "introduct",
@@ -174,6 +175,31 @@ const group = reactive({
   introduction: "小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.",
   qqAccount: 123123453,
 });
+
+let global_store = store()
+axios.defaults.headers['authorization'] = global_store.token;
+axios.post(global_store.serverURL + "team/getTeamById", {team_id: user.groupID})
+    .then(response => {
+      let data = response.data
+      group.groupID = data.team_id
+      group.groupName = data.team_name
+      group.term = data.term
+
+      axios.post(global_store.serverURL + "project/getProject", {projectId: data.project_id})
+          .then(response => {
+            let data2= response.data
+            group.ProjName = data2.project_name
+          })
+
+      axios.post(global_store.serverURL + "team/GetTeamMember", {projectId: data.project_id})
+          .then(response => {
+            let data3= response.data
+
+            group.members = data3.names
+            group.memberIDs = data3.ids
+          })
+    })
+
 
 const valid = ref(true);
 const router = useRouter();
@@ -209,6 +235,10 @@ const addMemberID = () => {
 const backPage = () => {
   router.go(-1);
 }
+
+const submitMessage = () => {
+
+};
 
 
 </script>

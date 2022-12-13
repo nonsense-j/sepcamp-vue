@@ -97,6 +97,7 @@
 </style>
 <script setup>
 import { store } from "~/store/store"
+import axios from "axios";
 
 definePageMeta({
   layout: "introduct",
@@ -119,6 +120,20 @@ const userInfo = reactive({
   introduction: "作为一名经管与计算机应用专业的学生，我认识到互联网将在未来经济中发挥巨大的作用，所以，业余时间我刻苦自学了很多网络知识。而且，我还不满足于此，进一步学习了Html语言，和Frontpage，Dreamweaver，等网页编辑软件，Firework，flash等网页图形处理软件，可以自如的进行网页编辑。",
   qqAccount: 573924561,
 })
+let global_store = store()
+axios.defaults.headers['authorization'] = global_store.token;
+alert(global_store.userID)
+axios.post(global_store.serverURL + "userinfo/getUserInformation", {userId: global_store.userID})
+    .then(response => {
+      let data = response.data
+
+      axios.post(global_store.serverURL + "team/getTeamById", {teamId: data.team_id})
+          .then(response => {
+            let data2= response.data
+            userInfo.groupName = data2.team_name
+          })
+
+    })
 
 const showNotGrouped = { false: '尚未组队', true: '' };
 

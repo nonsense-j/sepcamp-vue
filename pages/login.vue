@@ -116,6 +116,9 @@ export default {
               global_store.setToken('Bearer ' + result.token)
               global_store.setPriority(result.priority)
               global_store.setUsername(result.message)
+              global_store.setUserID(result.user_id)
+              global_store.setGroupID(result.team_id)
+
               this.$router.push('/')
               alert('登录成功')
             }
