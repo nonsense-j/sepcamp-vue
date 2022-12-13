@@ -104,8 +104,8 @@ definePageMeta({
 const task = reactive({
   date: '20221107',
   type: 1,
-  questions: ["第6个Bottles版本为什么要分为两个类？", "Hotwire创新中，Stimulu解决什么问题？"],
-  answers: ["分为两类更便于维护", "Stimulus 是一个抱负不大的 JavaScript 框架。它并不试图接管你的整个前端——事实上，它根本不关心渲染 HTML。相反，它旨在通过足够的行为来增强您的 HTML，使其大放异彩。 Stimulus 与 Turbo 完美搭配，以最少的工作量为快速、引人注目的应用程序提供完整的解决方案"],
+  questions: [],
+  answers: [],
   expireDate: '20221114',
   submitStatus: 1,
 });

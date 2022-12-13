@@ -165,8 +165,8 @@ const group = reactive({
   groupName: "Bug生产队",
   ProjName: "面向群聊的聊天机器人",
   term: "2022秋",
-  members: ["Aurora", "Charlie"],
-  memberIDs: [1001, 1002],
+  members: [],
+  memberIDs: [],
   interests: ["机器学习", "自然语言处理"],
   introduction: "小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.",
   qqAccount: 123123453,
@@ -238,6 +238,10 @@ const backPage = () => {
 }
 
 const submitMessage = () => {
+
+  group.members = ["Aurora", "Charlie"];
+      group.memberIDs = [1001, 1002];
+
   axios.defaults.headers['authorization'] = global_store.token;
   axios.post(global_store.serverURL + "team/ChangeTeamInformation", {
     team_id: global_store.groupID,

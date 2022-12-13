@@ -67,7 +67,7 @@
               <v-spacer />
               <!-- TODO: -->
               <!-- 点击退出小组进入创建小组页面 -->
-              <v-btn color="warning" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg" @click="exitGroup()"
+              <v-btn v-if="user.groupID == group.groupID" color="warning" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg" @click="exitGroup()"
                 class="mr-3">
                 退出小组
               </v-btn>
@@ -126,8 +126,8 @@ const group = reactive({
   groupName: "Bug生产队",
   ProjName: "面向群聊的聊天机器人",
   term: "2022秋",
-  members: ["Aurora", "Charlie"],
-  memberIDs: [1001, 1002],
+  members: [],
+  memberIDs: [],
   interests: ["机器学习", "自然语言处理"],
   introduction: "小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.",
   qqAccount: 123123453,
