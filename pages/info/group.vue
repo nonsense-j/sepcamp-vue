@@ -67,8 +67,8 @@
               <v-spacer />
               <!-- TODO: -->
               <!-- 点击退出小组进入创建小组页面 -->
-              <v-btn color="warning" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg" @click="exitGroup()"
-                class="mr-3">
+              <v-btn v-if="user.groupID == group.groupID" color="warning"
+                append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg" @click="exitGroup()" class="mr-3">
                 退出小组
               </v-btn>
               <v-btn color="primary" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg"

@@ -8,10 +8,13 @@
         append-icon="mdi-swap-vertical-bold" variant="outlined">
         开题提交流
       </v-btn>
-      <v-btn elevation="4" color="primary"
+      <v-btn v-if="user.priority == 0" elevation="4" color="primary"
         :append-icon="(user.groupID == $route.query.id) ? 'mdi-arrow-up-circle' : 'mdi-minus-circle'"
-        @click="upSubmit()" :disabled="user.groupID != $route.query.id" class="disable-btn">
+        @click="upSubmit()" :disabled="user.groupID != $route.query.id">
         上传材料
+      </v-btn>
+      <v-btn v-else elevation="4" color="red-lighten-1" append-icon="mdi-reply-circle" @click="upReply()">
+        回复建议
       </v-btn>
     </div>
     <div class="mx-auto mt-2">
@@ -25,6 +28,7 @@
           size="x-small">
           <template v-slot:opposite>
             <div :class="`text-${typeColors[record.type]}`">
+              <v-icon icon="mdi-calendar" class="mr-2" />
               <v-icon :icon="iconList[record.type]" />
               {{ record.time }}
             </div>
@@ -48,7 +52,7 @@
                 </v-container>
               </div>
               <div v-else>
-                <v-list class="text-red" density="compact">
+                <v-list class="text-red-lighten-1" density="compact">
                   <v-list-item v-for="advice in record.advices" :key="advice">
                     <v-icon icon="mdi-square-medium" />
                     {{ advice }}
@@ -86,6 +90,8 @@ definePageMeta({
   middleware: ["auth",]
 });
 
+const router = useRouter();
+const route = useRoute();
 const user = {
   userName: store().username,
   priority: store().priority,
@@ -93,24 +99,8 @@ const user = {
   groupID: store().groupID,
 }
 
-const router = useRouter();
-const route = useRoute();
-const backPage = () => {
-  router.go(-1);
-}
-// TODO:
-const upSubmit = () => {
-  // flow=0 表示开题， flow=1表示结题
-  router.push(`/project/submit/create?id=${route.query.id}&flow=0`);
-}
-const getFile = (url) => {
-  // TODO:
-  // 点击下载链接
-  console.log(url);
-}
-
-const typeColors = { 1: "primary", 2: "red" };
-const iconList = { 1: "mdi-calendar", 2: "mdi-message-reply-text" };
+const typeColors = { 1: "primary", 2: "red-lighten-1" };
+const iconList = { 1: "mdi-arrow-up-circle", 2: "mdi-reply-circle" };
 const checkAccept = { false: "未评分", true: "已评分" };
 const acceptColor = { false: "warning", true: "success" };
 
@@ -139,5 +129,23 @@ const openWorkFlow = reactive({
   ]
 }
 );
+
+const backPage = () => {
+  router.go(-1);
+}
+// TODO:
+const upSubmit = () => {
+  // flow=0 表示开题， flow=1表示结题
+  router.push(`/project/submit/create?id=${route.query.id}&flow=0`);
+}
+const upReply = () => {
+  // flow=0 表示开题， flow=1表示结题
+  router.push(`/project/submit/reply?id=${route.query.id}&flow=0`);
+}
+const getFile = (url) => {
+  // TODO:
+  // 点击下载链接
+  console.log(url);
+}
 
 </script>

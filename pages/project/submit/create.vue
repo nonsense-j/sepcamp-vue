@@ -1,11 +1,11 @@
 <template>
   <div class="d-flex flex-column">
-    <v-sheet class="mx-auto" rounded>
+    <div class="mx-auto">
       <v-btn elevation="4" class="text-btn" size="x-large" prepend-icon="mdi-swap-vertical-bold"
-        append-icon="mdi-swap-vertical-bold" variant="outlined">
+        append-icon="mdi-swap-vertical-bold" color="primary">
         创建新提交
       </v-btn>
-    </v-sheet>
+    </div>
     <v-form v-model="valid" lazy-validation>
       <v-sheet min-width="400px" class="pa-3 mx-auto mt-5 w-66" rounded="lg" elevation="6">
         <v-container>
@@ -67,7 +67,7 @@ import { store } from "~/store/store"
 
 definePageMeta({
   layout: "content",
-  middleware: ["auth", "sameuid"]
+  middleware: ["auth", "samegid"]
 });
 
 const valid = ref(false);
@@ -93,6 +93,9 @@ const submit = () => {
   if (files && record.msg) {
     let flow = route.query.flow == 0 ? 'openflow' : 'endflow';
     router.push(`/project/submit/${flow}?id=${route.query.id}`);
+  }
+  else {
+    alert("请先补充完内容字段！");
   }
 }
 
