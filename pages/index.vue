@@ -91,7 +91,7 @@
 import workimg from '~/assets/image/homework.jpg'
 import ideaimg from '~/assets/image/ideas.jpg'
 import projimg from '~/assets/image/project.jpg'
-import {store} from "~/store/store"
+import { store } from "~/store/store"
 
 definePageMeta({
   layout: "main",
@@ -102,10 +102,10 @@ const user = {
   priority: store().priority,
 }
 
-const taskLink = user.priority ? "/task/manage" : "/task/taskflow";
-const projectLink = user.priority ? "/project/manage" : "/project/board";
-const notTeacher = !user.priority;
-const projText = user.priority ? "教师可以通过查看管理所有课程学生项目，对项目的提交情况以及功能点进度进行检查以及提供意见。" : "在开始进行你的项目之前，你需要首先在我的小队中进行组队。组队完成后可进入查看项目进度管理。";
+const taskLink = user.priority > 0 ? "/task/manage" : "/task/taskflow";
+const projectLink = user.priority > 0 ? "/project/manage" : "/project/board";
+const notTeacher = user.priority <= 0;
+const projText = user.priority > 0 ? "教师可以通过查看管理所有课程学生项目，对项目的提交情况以及功能点进度进行检查以及提供意见。" : "在开始进行你的项目之前，你需要首先在我的小队中进行组队。组队完成后可进入查看项目进度管理。";
 const workImg = workimg;
 const ideaImg = ideaimg;
 const projImg = projimg;

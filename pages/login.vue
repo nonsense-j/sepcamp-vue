@@ -55,7 +55,7 @@
 </style>
 <script>
 import axios from "axios";
-import {store} from "~/store/store";
+import { store } from "~/store/store";
 
 definePageMeta({
   layout: "entrance",
@@ -107,31 +107,31 @@ export default {
       user.append('password', this.$encrypt(this.password, this.rsa_pub_key))
       //axios.defaults.headers['authorization'] = global_store.token;
       axios.post(global_store.serverURL + "dologin", user)
-          .then(response => {
-            if(response.status === 200) {
-              // TODO: deal with login success
-              let result = response.data
-              if(result.success === true) {
-                // login success
-                global_store.setToken('Bearer ' + result.token)
-                global_store.setPriority(result.priority)
-                global_store.setUsername(result.message)
-                this.$router.push('/')
-                alert('登录成功')
-              }
-              else {
-                alert(result.message)
-              }
+        .then(response => {
+          if (response.status === 200) {
+            // TODO: deal with login success
+            let result = response.data
+            if (result.success === true) {
+              // login success
+              global_store.setToken('Bearer ' + result.token)
+              global_store.setPriority(result.priority)
+              global_store.setUsername(result.message)
+              this.$router.push('/')
+              alert('登录成功')
             }
             else {
-              // TODO: deal with other response code
-              console.log(response)
+              alert(result.message)
             }
-          })
-          .catch(error => {
-            // TODO: deal with error
-            console.error(error)
-          })
+          }
+          else {
+            // TODO: deal with other response code
+            console.log(response)
+          }
+        })
+        .catch(error => {
+          // TODO: deal with error
+          console.error(error)
+        })
       this.loading[1] = false
     }
   },

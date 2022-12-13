@@ -73,7 +73,7 @@
 </style>
 <script setup>
 import axios from "axios";
-import {store} from "~/store/store";
+import { store } from "~/store/store";
 
 definePageMeta({
   layout: "default",
@@ -105,7 +105,7 @@ axios.post(store().serverURL + "homework/getAllList", {term:"20222"})
       tasks.push({
         date: new Date(data[i].start_Time),
         type: data[i].homework_Type,
-        questions: data[i].describe_Text.split('\a'),
+        questions: [data[i].describe_Text],
         expireDate: new Date(data[i].end_Time),
         submitStatus: 0
       })
@@ -113,37 +113,6 @@ axios.post(store().serverURL + "homework/getAllList", {term:"20222"})
     .catch(error => {
       console.log(error)
     })
-
-// 任务接口 type(1课堂作业，2课后作业)
-/*
-const tasks = ref([
-  {
-    date: '20221212',
-    type: 2,
-    questions: ["如果已知一个Web应用的所有源代码，你将如何进行安全加固？"],
-    expireDate: '20221219',
-    submitStatus: 0,
-  }, {
-    date: '20221116',
-    type: 2,
-    questions: ["根据今天的讲课Chat软件，增加一个用户注册和登录功能。"],
-    expireDate: '20221123',
-    submitStatus: 1,
-  }, {
-    date: '20221107',
-    type: 1,
-    questions: ["第6个Bottles版本为什么要分为两个类？", "Hotwire创新中，Simulu解决什么问题？"],
-    expireDate: '20221114',
-    submitStatus: 1,
-  }, {
-    date: '20221107',
-    type: 2,
-    questions: ["若用机器学习来完成song, verse(number),verses(starting, ending)等任务，你论证一下是否可以实现。如果上述问题可以，你应该如何设计数据集，神经网络和训练程序？"],
-    expireDate: '20221114',
-    submitStatus: 1,
-  },
-]);
-*/
 
 let now = new Date()
 

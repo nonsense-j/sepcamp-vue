@@ -22,15 +22,23 @@
               :rules="contentRules" :placeholder="question" density="comfortable" variant="outlined" color="primary"
               clearable>
             </v-text-field>
-            <div class="d-flex flex-row">
+            <div class="item-length">
               <v-select prepend-icon="mdi-format-list-bulleted-type" variant="outlined" v-model="select"
                 :items="taskTypes" :rules="[v => !!v || '作业类型必选']" placeholder="作业类型" density="compact" class="mr-5"
                 required>
               </v-select>
-              <v-text-field v-model="selectDate" :rules="contentRules" density="comfortable" variant="outlined"
-                prepend-icon="mdi-calendar" placeholder="点击右侧日期选择器选择截止日期">
+            </div>
+            <div class="d-flex flex-row date-length">
+              <v-text-field v-model="selectDate" :rules="contentRules" density="compact" variant="outlined"
+                prepend-icon="mdi-calendar" placeholder="点击右侧日期选择器选择作业对应的课程时间" disabled>
               </v-text-field>
-              <Datepicker v-model="fullDate" class="mx-2 pt-1" :format="dateFormat"> </Datepicker>
+              <Datepicker v-model="fullSelectDate" class="mx-2 w-25" :format="dateFormat"> </Datepicker>
+            </div>
+            <div class="d-flex flex-row date-length">
+              <v-text-field v-model="expireDate" :rules="contentRules" density="compact" variant="outlined"
+                prepend-icon="mdi-calendar-clock" placeholder="点击右侧日期选择器选择作业截止时间" disabled>
+              </v-text-field>
+              <Datepicker v-model="fullExpireDate" class="mx-2 w-25" :format="dateFormat"> </Datepicker>
             </div>
             <div>
               <v-btn class="mx-3" color="info" size="large" append-icon="mdi-plus-circle" rounded="lg"
@@ -62,6 +70,15 @@
   cursor: default;
 }
 
+.item-length {
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.date-length {
+  width: 550px;
+}
+
 .main-sheet {
   min-height: 80vh;
   width: 96%;
@@ -83,17 +100,24 @@ const reduceQuest = () => {
 };
 
 // date picker
-const fullDate = ref();
+const fullSelectDate = ref();
+const fullExpireDate = ref();
 let selectDate = ref();
-let selectDate2 = ref();
+let expireDate = ref();
+const select = ref();
 const taskTypes = ["课堂作业", "课后作业"];
-const select = ref(taskTypes[0]);
-watch(fullDate, (newValue, oldValue) => {
+watch(fullSelectDate, (newValue, oldValue) => {
   const year = newValue.getFullYear().toString();
   const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
   const day = newValue.getDate().toString().padStart(2, '0');
   selectDate = year + month + day;
-  selectDate2 =  year + "-" + month + "-" + day;
+  expireDate =  year + "-" + month + "-" + day;
+});
+watch(fullExpireDate, (newValue, oldValue) => {
+  const year = newValue.getFullYear().toString();
+  const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
+  const day = newValue.getDate().toString().padStart(2, '0');
+  expireDate = year + month + day;
 });
 const dateFormat = (date) => {
   const year = date.getFullYear().toString();
@@ -104,20 +128,22 @@ const dateFormat = (date) => {
 }
 
 const createTask = () => {
-  if(typeof selectDate2 === 'undefined') {
-    alert('请先选择结束日期')
+  let startDate = fullSelectDate.value
+  let endDate = fullExpireDate.value
+  if(typeof startDate === 'undefined') {
+    alert('请先选择开始日期')
     return
   }
+  if(typeof endDate === 'undefined') {
+    alert('请先选择结束日期')
+  }
   const global_store = store()
-  let timestamp=new Date().getTime()
   let DescribeText = contents.join("^")
-  let endDate = new Date(selectDate2).getTime()
   let homeworkType = select.value === '课堂作业' ? 2 : 1
-  console.log(timestamp)
   let task = {
     describe_Text: DescribeText,
-    start_Time: timestamp,
-    end_Time: endDate,
+    start_Time: startDate.valueOf(),
+    end_Time: endDate.valueOf(),
     term: '20222',
     homework_Type: homeworkType
   }
