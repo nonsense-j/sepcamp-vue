@@ -98,8 +98,10 @@ const route = useRoute();
 const backPage = () => {
   router.go(-1);
 }
+// TODO:
 const upSubmit = () => {
-  router.push("/project/submit/create?type=0");
+  // flow=0 表示开题， flow=1表示结题
+  router.push(`/project/submit/create?id=${route.query.id}&flow=0`);
 }
 const getFile = (url) => {
   // TODO:
