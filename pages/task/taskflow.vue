@@ -93,7 +93,6 @@ axios.post(store().serverURL + "homework/getOneUserList")
     .then(response => {
       let data = response.data
       for(let i = 0; i < data.length; i ++) {
-        console.log(data[i])
         tasks.push({
           date: new Date(data[i].start_Time),
           type: data[i].homework_Type,

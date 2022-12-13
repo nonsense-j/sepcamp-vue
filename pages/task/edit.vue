@@ -209,7 +209,7 @@ const task = reactive({
   submitStatus: 0
 })
 
-axios.defaults.headers['authorization'] = global_store.token;
+axios.defaults.headers['authorization'] = global_store.token
 axios.post(global_store.serverURL + "homework/getOneList", {homework_Id: homework_id})
     .then(response => {
       let data = response.data
