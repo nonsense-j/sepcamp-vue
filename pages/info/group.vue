@@ -159,7 +159,6 @@ axios.post(global_store.serverURL + "team/getTeamById", {team_id: global_store.g
     })
 
 const router = useRouter();
-const global_store = store();
 const exitGroup = () => {
   if (confirm("是否确认退出当前小组？")) {
     // TODO
