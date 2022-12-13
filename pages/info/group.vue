@@ -141,7 +141,6 @@ axios.post(global_store.serverURL + "team/getTeamById", {team_id: global_store.g
       group.groupName = data.team_name
       group.term = data.term
 
-      alert(data.project_id)
 
       axios.post(global_store.serverURL + "project/getProject", {project_id: data.project_id})
           .then(response => {
@@ -149,10 +148,9 @@ axios.post(global_store.serverURL + "team/getTeamById", {team_id: global_store.g
             group.ProjName = data2.project_name
           })
 
-      axios.post(global_store.serverURL + "team/GetTeamMember", {project_id: data.project_id})
+      axios.post(global_store.serverURL + "team/GetTeamMember", {team_id: global_store.groupID})
           .then(response => {
             let data3= response.data
-
             group.members = data3.names
             group.memberIDs = data3.ids
           })
