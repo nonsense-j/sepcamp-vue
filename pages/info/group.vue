@@ -140,8 +140,9 @@ axios.post(global_store.serverURL + "team/getTeamById", {team_id: global_store.g
       group.groupID = data.team_id
       group.groupName = data.team_name
       group.term = data.term
-
-
+     group.interests = data.interests.split('\u0001')
+     group.introduction = data.introduction
+      group.qqAccount = data.qqnumber
       axios.post(global_store.serverURL + "project/getProject", {project_id: data.project_id})
           .then(response => {
             let data2= response.data

@@ -113,7 +113,7 @@
                 <!-- TODO: -->
                 <!-- 点击提交信息回到小组信息页并且刷新 -->
                 <NuxtLink :to="`/info/group?id=${$route.query.id}`" class=" text-decoration-none">
-                  <v-btn color="primary" @click="submitMessage" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg">
+                  <v-btn color="primary"  append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg" @click="submitMessage">
                     提交信息
                   </v-btn>
                 </NuxtLink>
@@ -174,31 +174,35 @@ const group = reactive({
   interests: ["机器学习", "自然语言处理"],
   introduction: "小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.小组面向开发人员的群聊场景,提供专门的提高开发与解决问题效率的机器人.",
   qqAccount: 123123453,
+  projectId:0,
 });
 
 let global_store = store()
 axios.defaults.headers['authorization'] = global_store.token;
-axios.post(global_store.serverURL + "team/getTeamById", {team_id: user.groupID})
+axios.post(global_store.serverURL + "team/getTeamById", {team_id: global_store.groupID})
     .then(response => {
       let data = response.data
       group.groupID = data.team_id
       group.groupName = data.team_name
       group.term = data.term
-
-      axios.post(global_store.serverURL + "project/getProject", {project_Id: data.project_Id})
+      group.interests = data.interests.split('\u0001')
+      group.introduction = data.introduction
+      group.qqAccount = data.qqnumber
+      group.projectId = data.project_id
+      axios.post(global_store.serverURL + "project/getProject", {project_id: data.project_id})
           .then(response => {
             let data2= response.data
             group.ProjName = data2.project_name
           })
 
-      axios.post(global_store.serverURL + "team/GetTeamMember", {project_Id: data.project_Id})
+      axios.post(global_store.serverURL + "team/GetTeamMember", {team_id: global_store.groupID})
           .then(response => {
             let data3= response.data
-
             group.members = data3.names
             group.memberIDs = data3.ids
           })
     })
+
 
 
 const valid = ref(true);
@@ -237,8 +241,46 @@ const backPage = () => {
 }
 
 const submitMessage = () => {
+  alert(111)
+  axios.defaults.headers['authorization'] = global_store.token;
+  axios.post(global_store.serverURL + "team/ChangeTeamInformation", {
+    team_id: global_store.groupID,
+    team_name:group.team_name,
+    Interests:group.Interests.join("\u0001"),
+    Introduction:group.introduction,
+    QQNumber:group.QQNumber,
+  }).then(response => {
+    alert(111)
+        if(response.status === 200) {
+          let result = response.data
+          if(result.success === true) {
+            alert('小组信息修改成功')
+          }
+          else {
+            alert(result.message)
+          }
+        } else {
+          console.log(response)
+        }
+      })
 
-};
+  axios.post(global_store.serverURL + "project/changeName", {
+    project_id: group.projectId,
+    project_name:group.ProjName,
+  }).then(response => {
+    if(response.status === 200) {
+      let result = response.data
+      if(result.success === true) {
+        alert('小组信息修改成功')
+      }
+      else {
+        alert(result.message)
+      }
+    } else {
+      console.log(response)
+    }
+  })
+}
 
 
 </script>
