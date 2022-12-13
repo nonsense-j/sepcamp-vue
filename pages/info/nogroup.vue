@@ -152,6 +152,7 @@ import { store } from "~/store/store"
 
 definePageMeta({
   layout: "introduct",
+  middleware: ["auth", "ungrouped"]
 });
 
 const user = {

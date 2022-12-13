@@ -71,7 +71,8 @@
                 class="mr-3">
                 退出小组
               </v-btn>
-              <v-btn color="primary" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg">
+              <v-btn color="primary" append-icon="mdi-arrow-right-drop-circle-outline" rounded="lg"
+                v-if="user.groupID == group.groupID">
                 <NuxtLink :to="`/info/grouped?id=${group.groupID}`" class="text-white text-decoration-none">
                   编辑小组
                 </NuxtLink>
@@ -107,20 +108,20 @@
 import { store } from "~/store/store"
 
 definePageMeta({
-  layout: "introduct"
+  layout: "introduct",
+  middleware: ["auth"]
 });
 
+const route = useRoute();
+
 const user = {
-  userName: store().username,
-  priority: store().priority,
-  userID: store().userID,
   groupID: store().groupID,
 }
 
 // TODO: 
 // 根据Token访问数据库获取(ID可以通过Token获取或者store)
 const group = reactive({
-  groupID: user.groupID, //-1表示没有组队
+  groupID: route.query.id, //-1表示没有组队
   groupName: "Bug生产队",
   ProjName: "面向群聊的聊天机器人",
   term: "2022秋",
@@ -132,11 +133,13 @@ const group = reactive({
 });
 
 const router = useRouter();
+const global_store = store();
 const exitGroup = () => {
   if (confirm("是否确认退出当前小组？")) {
     // TODO
     // 访问后端 store().groupID=-1
-    router.push("/info/nogroup");
+    global_store.setGroupID(-1);
+    router.push("/");
   }
 }
 

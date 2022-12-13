@@ -79,6 +79,9 @@
 // 引入组件
 import Vue3Tinymce from '@jsdawn/vue3-tinymce';
 
+definePageMeta({
+  middleware: ["auth"]
+});
 // 作业接口
 const task = {
   date: '20221107',

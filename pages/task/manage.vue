@@ -76,7 +76,7 @@ import axios from "axios";
 import { store } from "~/store/store";
 
 definePageMeta({
-  layout: "default",
+  middleware: ["onlyadmin"]
 });
 
 const typeColors = { '1': "cyan", '2': "amber" };

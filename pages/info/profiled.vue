@@ -10,7 +10,7 @@
       <div class="text-caption d-flex flex-row align-center">
         <div class="ml-1">
           <v-icon icon="mdi-link-box-variant" class=" mr-1" />
-          <span class=" text-subtitle-2">id:#{{ user.userID }}</span>
+          <span class=" text-subtitle-2">id:#{{ userInfo.userID }}</span>
         </div>
       </div>
     </div>
@@ -114,19 +114,15 @@ import { store } from "~/store/store"
 
 definePageMeta({
   layout: "introduct",
+  middleware: ["auth", "sameuid"]
 });
 
-const user = {
-  userName: store().username,
-  priority: store().priority,
-  userID: store().userID,
-  groupID: store().groupID,
-}
+const route = useRoute();
 
 // TODO: 
 // 根据Token访问数据库获取 也是form数据
 const userInfo = reactive({
-  userID: user.userID,
+  userID: route.query.id,
   term: "2022秋",
   interests: ["web开发", "前端", "图像处理", "人机交互"],
   introduction: "作为一名经管与计算机应用专业的学生，我认识到互联网将在未来经济中发挥巨大的作用，所以，业余时间我刻苦自学了很多网络知识。而且，我还不满足于此，进一步学习了Html语言，和Frontpage，Dreamweaver，等网页编辑软件，Firework，flash等网页图形处理软件，可以自如的进行网页编辑。",

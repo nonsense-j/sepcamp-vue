@@ -9,7 +9,8 @@ export const store = defineStore('store', {
         username: 'Aurora',
         userID: 1001,
         groupID: 9001, //-1表示没有组队
-        terms: ["2021秋", "2022秋", "2023秋"]
+        terms: ["2021秋", "2022秋", "2023秋"],
+        theme: "dark"
     }),
 
     actions: {

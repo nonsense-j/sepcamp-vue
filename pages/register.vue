@@ -65,7 +65,7 @@
 </style>
 <script>
 import axios from "axios";
-import {store} from "~/store/store";
+import { store } from "~/store/store";
 
 definePageMeta({
   layout: "entrance",
@@ -107,9 +107,9 @@ export default {
       '教师'
     ],
     rsa_pub_key: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfUL4XUO6v0vaWQ8GfSWvwSgTO\n' +
-        '6wXUBdHyTXXKGirCZ/r/isdfQqwkK1urDE2M2s+YAJYhLCrjf6nACejc8Rhx0UJ9\n' +
-        '9e9MKehfFkUA1MzvlG+Azu4tBzxjO04u6iLe+p+kOXMouH3nTmgWY7/4s2d85uxz\n' +
-        'PxO26t2eZb9qJRmatQIDAQAB'
+      '6wXUBdHyTXXKGirCZ/r/isdfQqwkK1urDE2M2s+YAJYhLCrjf6nACejc8Rhx0UJ9\n' +
+      '9e9MKehfFkUA1MzvlG+Azu4tBzxjO04u6iLe+p+kOXMouH3nTmgWY7/4s2d85uxz\n' +
+      'PxO26t2eZb9qJRmatQIDAQAB'
   }),
   methods: {
     register() {
@@ -123,27 +123,27 @@ export default {
         priority: priority
       }
       axios.post(global_store.serverURL + "register", user)
-          .then(response => {
-            if(response.status === 200) {
-              // TODO: deal with login success
-              let result = response.data
-              if(result.success === true) {
-                alert('注册成功！请前往邮箱进行验证')
-                this.$router.push('/')
-              }
-              else {
-                alert('注册失败，'+ result.message)
-              }
+        .then(response => {
+          if (response.status === 200) {
+            // TODO: deal with login success
+            let result = response.data
+            if (result.success === true) {
+              alert('注册成功！请前往邮箱进行验证')
+              this.$router.push('/login')
             }
             else {
-              // TODO: deal with other response code
-              console.log(response)
+              alert('注册失败，' + result.message)
             }
-          })
-          .catch(error => {
-            // TODO: deal with error
-            console.error(error)
-          })
+          }
+          else {
+            // TODO: deal with other response code
+            console.log(response)
+          }
+        })
+        .catch(error => {
+          // TODO: deal with error
+          console.error(error)
+        })
     },
     load(i) {
       this.loading[i] = true

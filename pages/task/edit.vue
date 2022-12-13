@@ -184,6 +184,9 @@
 </style>
 <script setup>
 import Datepicker from '@vuepic/vue-datepicker';
+definePageMeta({
+  middleware: ["onlyadmin"]
+});
 
 const typeNames = { 0: "添加作业", 1: "课堂作业", 2: "课后作业" };
 const checkExpire = { true: "未截止", false: "已截止" };
